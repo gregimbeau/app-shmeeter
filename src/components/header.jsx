@@ -27,6 +27,7 @@ const handleLogout = () => {
       ) : (
         <button onClick={handleLogout}>Logout</button>
       )}
+      <button onClick={() => navigate("/profile")}>Profile</button>
     </div>
   );
 };

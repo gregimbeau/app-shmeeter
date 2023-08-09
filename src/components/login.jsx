@@ -17,29 +17,42 @@ const LoginForm = () => {
     }
   }, [navigate]);
 
-  const fetchUserProfile = async () => {
-    const token = Cookies.get("token");
-    try {
-      const response = await fetch("http://localhost:1337/users/me", {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
-      const data = await response.json();
-      console.log(data);
-    } catch (error) {
-      console.error("Error fetching user profile:", error);
-    }
-  };
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setLoginData((prevState) => ({
       ...prevState,
       [name]: value,
     }));
+  };
+
+  const fetchUserProfile = async () => {
+    const token = Cookies.get("token");
+
+    if (token) {
+      try {
+        const response = await fetch("http://localhost:1337/api/users/me", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (!response.ok) {
+          const text = await response.text();
+          throw new Error(`HTTP error ${response.status}: ${text}`);
+        }
+
+        const userProfile = await response.json();
+        console.log("User profile:", userProfile);
+
+        // Vous pouvez, par exemple, sauvegarder ce profil dans un état ou effectuer d'autres traitements ici.
+      } catch (error) {
+        console.error("There was an error fetching user profile:", error);
+      }
+    } else {
+      console.log("No token found. User is not authenticated.");
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -62,15 +75,15 @@ const LoginForm = () => {
       }
 
       const data = await response.json();
+
       if (data.jwt) {
         localStorage.setItem("jwt", data.jwt);
         Cookies.set("token", data.jwt, { expires: 7 });
         console.log("Successfully logged in!");
 
-        // Call the fetchUserProfile function
-        fetchUserProfile();
+        fetchUserProfile(); // Call after successfully logging in
 
-        navigate("/");
+        navigate("/"); // Redirection après une connexion réussie
       } else {
         console.log("Error logging in:", data.message);
         setErrorMsg(data.message);
