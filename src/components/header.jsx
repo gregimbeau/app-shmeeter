@@ -28,6 +28,8 @@ const handleLogout = () => {
         <button onClick={handleLogout}>Logout</button>
       )}
       <button onClick={() => navigate("/profile")}>Profile</button>
+      <button onClick={() => navigate("/posts")}>Le Thread</button>
+      <button onClick={() => navigate("/createPost")}>Créer un post</button>
     </div>
   );
 };
