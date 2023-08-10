@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { fetchUserIdByUsername } from "../utilities/userMapping";
 
 const UserProfile = () => {
-  const { id, username } = useParams();
+  const { username } = useParams();
   const [user, setUser] = useState(null);
   const [posts, setPosts] = useState([]);
 
@@ -37,34 +37,26 @@ const UserProfile = () => {
       try {
         const data = await response.json();
         setUser(data);
+
+        // Fetch user's posts
+        const postsResponse = await fetch(
+          `http://localhost:1337/api/posts?author=${data.id}`
+        );
+
+        if (!postsResponse.ok) {
+          console.error("Error fetching posts:", postsResponse.statusText);
+          return;
+        }
+
+        const postsData = await postsResponse.json();
+        setPosts(postsData.data);
       } catch (error) {
         console.error("Error parsing JSON:", error);
       }
     };
 
     fetchUserProfile();
-    fetchUserPosts();
   }, [username]);
-
-  const fetchUserPosts = async () => {
-    if (user && user.username) {
-      const response = await fetch(
-        `http://localhost:1337/api/posts?author=${user.username}`
-      );
-
-      if (!response.ok) {
-        console.error("Server response error", response.statusText);
-        return;
-      }
-
-      try {
-        const data = await response.json();
-        setPosts(data);
-      } catch (error) {
-        console.error("Error parsing JSON:", error);
-      }
-    }
-  };
 
   return (
     <div>
@@ -93,9 +85,10 @@ const UserProfile = () => {
           </table>
         </div>
       )}
+      <h2>User Posts:</h2>
       <ul>
         {posts.map((post) => (
-          <li key={post.id}>{post.content}</li>
+          <li key={post.id}>{post.attributes.text}</li>
         ))}
       </ul>
     </div>
