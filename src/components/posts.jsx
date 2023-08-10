@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import UserProfile from "./userProfile";
+
 import Likes from "./likes.jsx";
 
 const PostsPage = () => {
@@ -209,7 +212,16 @@ const PostsPage = () => {
           <ul>
             {posts.map((post) => (
               <li key={post.id}>
-                <h2>{getDisplayName(post)}</h2>
+                <h2>
+                  {post.attributes.author.data.attributes.username ? (
+                    <Link
+                      to={`/user/${post.attributes.author.data.attributes.username}`}>
+                      {getDisplayName(post)}
+                    </Link>
+                  ) : (
+                    "Nom d'utilisateur non disponible"
+                  )}
+                </h2>
                 <p>{post.attributes?.text || "Sans titre"}</p>
                 <Likes
                   likesCount={post.attributes?.like}

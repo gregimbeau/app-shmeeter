@@ -6,6 +6,7 @@ import Profile from "@/components/profile";
 import PostsPage from "@/components/posts";
 import CreatePost from "@/components/createPost";
 import Likes from "@/components/likes";
+import UserProfile from "@/components/userProfile";
 
 function App() {
   return (
@@ -21,6 +22,8 @@ function App() {
           <Route path='/posts' element={<PostsPage />} />
           <Route path='/createPost' element={<CreatePost />} />
           <Route path='/likes' element={<Likes />} />
+          <Route path='/user/:username' element={<UserProfile />} />
+          <Route path='/users/:id' element={<UserProfile />} />
         </Routes>
       </Router>
     </div>
