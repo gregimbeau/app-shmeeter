@@ -14,8 +14,9 @@ function App() {
         <Header />
 
         <Routes location={location}>
-          <Route path='/' element={<InscriptionForm />} />
+          <Route path='/' element={<PostsPage />} />
           <Route path='/login' element={<LoginForm />} />
+          <Route path='/form' element={<InscriptionForm />} />
           <Route path='/profile' element={<Profile />} />
           <Route path='/posts' element={<PostsPage />} />
           <Route path='/createPost' element={<CreatePost />} />

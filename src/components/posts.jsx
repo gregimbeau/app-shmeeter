@@ -182,10 +182,20 @@ const PostsPage = () => {
 
   return (
     <div>
-      <h1>Tous les posts</h1>
+      <secton>
+        <h1>Welcome on My Social Network.</h1>
+        <h2>This
+        website is a training to React, global state handling and tokens. Here,
+        authentification and routing will be used to create a small social media
+        website.</h2>
+      </secton>
       <div>
-        <button onClick={() => setSortOrder("desc")}>Tri par plus récents</button>
-        <button onClick={() => setSortOrder("asc")}>Tri par plus anciens</button>
+        <button onClick={() => setSortOrder("desc")}>
+          Tri par plus récents
+        </button>
+        <button onClick={() => setSortOrder("asc")}>
+          Tri par plus anciens
+        </button>
       </div>
       <ul>
         {posts.map((post) => (
