@@ -30,64 +30,60 @@ const PostsPage = () => {
       return await response.json();
     } catch (error) {
       console.error("Error updating post:", error);
-      throw error; // rethrow to handle in the calling function
+      throw error;
     }
   };
 
-  const handleLike = async (id) => {
-    try {
-      const post = posts.find((p) => p.id === id);
-      if (!post || !post.attributes || post.attributes.like === undefined) {
-        console.error("Post not found or post doesn't have likes:", post);
-        return;
-      }
-      const updatedLikeCount = post.attributes.like + 1;
+const handleLikeOrDislike = async (id, isLike = true) => {
+  const post = posts.find((p) => p.id === id);
 
-      const updatedPost = await updatePost(id, { like: updatedLikeCount }); // Adjust this part
-      if (!updatedPost) {
-        throw new Error("Failed to update post");
-      }
-      const updatedPosts = posts.map((post) =>
-        post.id === id ? updatedPost : post
-      );
-      setPosts(updatedPosts);
-    } catch (error) {
-      console.error("Error handling like:", error);
+  const updatedLikeCount = isLike
+    ? post.attributes.like + 1
+    : Math.max(post.attributes.like - 1, 0); // Ensure likes can't go negative
+
+  const optimisticPosts = posts.map((post) =>
+    post.id === id
+      ? {
+          ...post,
+          attributes: { ...post.attributes, like: updatedLikeCount },
+        }
+      : post
+  );
+  setPosts(optimisticPosts);
+
+  try {
+    const updatedPost = await updatePost(id, { like: updatedLikeCount });
+
+    if (!updatedPost) {
+      throw new Error("Failed to update post");
     }
-  };
+  } catch (error) {
+    console.error("Error handling like/dislike:", error);
+    const revertedPosts = posts.map((post) =>
+      post.id === id
+        ? {
+            ...post,
+            attributes: { ...post.attributes, like: post.attributes.like },
+          }
+        : post
+    );
+    setPosts(revertedPosts);
+    alert("Erreur lors de la mise à jour. Veuillez réessayer.");
+  }
+};
 
-  posts.forEach((post) => {
-    if (!post.attributes) {
-      console.error("Post missing attributes:", post);
-    } else if (!post.attributes.text) {
-      console.error("Post attributes missing text:", post);
-    }
-  });
+const handleLike = (id) => handleLikeOrDislike(id, true);
+const handleDislike = (id) => handleLikeOrDislike(id, false);
 
-  const handleDislike = async (id) => {
-    try {
-      const post = posts.find((p) => p.id === id);
 
-      // Check if post exists and has the 'dislike' attribute
-      if (!post || !post.attributes || post.attributes.dislike === undefined) {
-        console.error("Post not found or post doesn't have dislikes:", post);
-        return;
+  const checkPostAttributes = (posts) => {
+    posts.forEach((post) => {
+      if (!post.attributes) {
+        console.error("Post missing attributes:", post);
+      } else if (!post.attributes.text) {
+        console.error("Post attributes missing text:", post);
       }
-
-      // Update the dislike count
-      const updatedDislikeCount = post.attributes.dislike + 1;
-
-      // Send the update to the server
-      const updatedPost = await updatePost(id, {
-        dislike: updatedDislikeCount,
-      });
-
-      // Update local state with the modified post data
-      const updatedPosts = posts.map((p) => (p.id === id ? updatedPost : p));
-      setPosts(updatedPosts);
-    } catch (error) {
-      console.error("Error handling dislike:", error);
-    }
+    });
   };
 
   useEffect(() => {
@@ -97,17 +93,34 @@ const PostsPage = () => {
           "http://localhost:1337/api/posts?populate=author"
         );
         const result = await response.json();
+        console.log(result);
+
+        const ids = new Set();
+        result.data.forEach((post) => {
+          if (!post.id) {
+            console.error("Un post n'a pas d'ID:", post);
+          } else if (ids.has(post.id)) {
+            console.error("Duplication d'ID détectée pour le post:", post);
+          } else {
+            ids.add(post.id);
+          }
+        });
 
         if (result.data && Array.isArray(result.data)) {
           setPosts(result.data);
+          checkPostAttributes(result.data); // Vérification des attributs après avoir défini les articles
         } else {
-          console.error("API did not return the expected format:", result);
+          console.error("L'API n'a pas renvoyé le format attendu :", result);
           setError("Format de données inattendu.");
         }
 
         setLoading(false);
-      } catch (err) {
-        setError(err.message);
+      } catch (error) {
+        console.error(
+          "Une erreur s'est produite lors de la récupération des articles :",
+          error
+        );
+        setError("Erreur lors de la récupération des articles.");
         setLoading(false);
       }
     };
@@ -140,7 +153,6 @@ const PostsPage = () => {
             <p>{post.attributes?.text || "Sans titre"}</p>
             <Likes
               likesCount={post.attributes?.like}
-              dislikesCount={post.attributes?.dislike}
               onLike={() => handleLike(post.id)}
               onDislike={() => handleDislike(post.id)}
             />

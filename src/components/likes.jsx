@@ -1,32 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 
-function Likes({ likesCount, dislikesCount, onLike, onDislike }) {
-  const [localLikesCount, setLocalLikesCount] = useState(likesCount);
-  const [localDislikesCount, setLocalDislikesCount] = useState(dislikesCount);
-
-  useEffect(() => {
-    setLocalLikesCount(likesCount);
-    setLocalDislikesCount(dislikesCount);
-  }, [likesCount, dislikesCount]);
-
-  const handleLike = () => {
-    setLocalLikesCount((prevCount) => prevCount + 1);
-    onLike();
-  };
-
-  const handleDislike = () => {
-    setLocalDislikesCount((prevCount) => prevCount + 1);
-    onDislike();
-  };
-
+function Likes({ likesCount, onLike, onDislike }) {
   return (
     <div>
-      <button onClick={handleLike}>Like</button>
-      <span>{localLikesCount || 0} likes</span>
-      <button onClick={handleDislike}>Dislike</button>
-      <span>{localDislikesCount || 0} dislikes</span>
+      <button onClick={onLike}>Like</button>
+      <button onClick={onDislike}>Dislike</button>
+      <span>{likesCount || 0} likes</span>
     </div>
   );
 }
+
 
 export default Likes;
