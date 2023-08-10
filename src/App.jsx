@@ -5,6 +5,7 @@ import LoginForm from "@/components/login";
 import Profile from "@/components/profile";
 import PostsPage from "@/components/posts";
 import CreatePost from "@/components/createPost";
+import Likes from "@/components/likes";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path='/profile' element={<Profile />} />
           <Route path='/posts' element={<PostsPage />} />
           <Route path='/createPost' element={<CreatePost />} />
+          <Route path='/likes' element={<Likes />} />
         </Routes>
       </Router>
     </div>
