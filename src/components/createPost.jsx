@@ -37,7 +37,7 @@ const CreatePost = () => {
       }
     } else {
       console.log("No token found. User is not authenticated.");
-      setError("User is not authenticated"); // set error
+      setError("User is not authenticated. You must log in first"); // set error
       setLoading(false); // end loading
     }
   };

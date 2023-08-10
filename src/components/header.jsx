@@ -11,7 +11,7 @@ const Header = () => {
 const handleLogout = () => {
   localStorage.removeItem("jwt");
   Cookies.remove("token");
-  navigate("/login"); // Redirect to login after logout
+  navigate("/"); // Redirect to login after logout
 };
   return (
     <div

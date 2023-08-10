@@ -81,7 +81,7 @@ const Profile = () => {
     }
   };
 
-  if (!userProfile) return <p>Loading...</p>;
+  if (!userProfile) return <p>You must log in first...</p>;
 
   return (
     <div>

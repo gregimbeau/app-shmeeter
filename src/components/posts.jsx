@@ -6,6 +6,7 @@ const PostsPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [sortOrder, setSortOrder] = useState("desc");
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
 
   const handleDelete = async (id) => {
     try {
@@ -108,6 +109,10 @@ const PostsPage = () => {
   };
 
   useEffect(() => {
+    const token = localStorage.getItem("jwt");
+    if (token) {
+      setIsUserLoggedIn(true);
+    }
     const fetchPosts = async () => {
       try {
         const response = await fetch(
@@ -184,35 +189,45 @@ const PostsPage = () => {
     <div>
       <section>
         <h1>Welcome on My Social Network.</h1>
-        <h2>This
-        website is a training to React, global state handling and tokens. Here,
-        authentification and routing will be used to create a small social media
-        website.</h2>
+        <h2>
+          This website is a training to React, global state handling and tokens.
+          Here, authentification and routing will be used to create a small
+          social media website.
+        </h2>
       </section>
-      <div>
-        <button onClick={() => setSortOrder("desc")}>
-          Tri par plus récents
-        </button>
-        <button onClick={() => setSortOrder("asc")}>
-          Tri par plus anciens
-        </button>
-      </div>
-      <ul>
-        {posts.map((post) => (
-          <li key={post.id}>
-            <h2>{getDisplayName(post)}</h2>
-            <p>{post.attributes?.text || "Sans titre"}</p>
-            <Likes
-              likesCount={post.attributes?.like}
-              onLike={() => handleLike(post.id)}
-              onDislike={() => handleDislike(post.id)}
-            />
-            {Number(post.attributes.author.data.id) === currentUserId ? (
-              <button onClick={() => handleDelete(post.id)}>Supprimer</button>
-            ) : null}
-          </li>
-        ))}
-      </ul>
+
+      {isUserLoggedIn ? (
+        <>
+          <div>
+            <button onClick={() => setSortOrder("desc")}>
+              Tri par plus récents
+            </button>
+            <button onClick={() => setSortOrder("asc")}>
+              Tri par plus anciens
+            </button>
+          </div>
+          <ul>
+            {posts.map((post) => (
+              <li key={post.id}>
+                <h2>{getDisplayName(post)}</h2>
+                <p>{post.attributes?.text || "Sans titre"}</p>
+                <Likes
+                  likesCount={post.attributes?.like}
+                  onLike={() => handleLike(post.id)}
+                  onDislike={() => handleDislike(post.id)}
+                />
+                {Number(post.attributes.author.data.id) === currentUserId ? (
+                  <button onClick={() => handleDelete(post.id)}>
+                    Supprimer
+                  </button>
+                ) : null}
+              </li>
+            ))}
+          </ul>
+        </>
+      ) : (
+        <p>Please log in to view posts.</p>
+      )}
     </div>
   );
 };
