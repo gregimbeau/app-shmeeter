@@ -182,13 +182,13 @@ const PostsPage = () => {
 
   return (
     <div>
-      <secton>
+      <section>
         <h1>Welcome on My Social Network.</h1>
         <h2>This
         website is a training to React, global state handling and tokens. Here,
         authentification and routing will be used to create a small social media
         website.</h2>
-      </secton>
+      </section>
       <div>
         <button onClick={() => setSortOrder("desc")}>
           Tri par plus récents

@@ -1,7 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Cookies from "js-cookie";
+import { GlobalStateContext } from "../GlobalStateContext";
 
 const Profile = () => {
+  const { state, dispatch } = useContext(GlobalStateContext);
+  // Accessing state:
+  console.log(state.displayName);
+
   const [userProfile, setUserProfile] = useState(null);
   const [formData, setFormData] = useState({
     username: "",
@@ -25,11 +30,12 @@ const Profile = () => {
 
           const data = await response.json();
           setUserProfile(data);
+          dispatch({ type: "SET_USER", payload: data }); // Update the global state with fetched user data
+
           setFormData({
             username: data.username || "",
             displayName: data.displayName || "",
             email: data.email || "",
-            // password: data.password || "",
             description: data.description || "",
           });
         } catch (error) {
@@ -39,7 +45,7 @@ const Profile = () => {
     };
 
     fetchUserProfile();
-  }, []);
+  }, [dispatch]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -51,21 +57,22 @@ const Profile = () => {
 
     try {
       const token = Cookies.get("token");
-          const response = await fetch(
-            `http://localhost:1337/api/users/${userProfile.id}`,
-            {
-              method: "PUT",
-              headers: {
-                Authorization: `Bearer ${token}`,
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(formData),
-            }
-          );
+      const response = await fetch(
+        `http://localhost:1337/api/users/${userProfile.id}`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
 
       const data = await response.json();
       if (data.id) {
         console.log("Profile updated!");
+        dispatch({ type: "SET_USER", payload: formData }); // Update the global state after profile is updated
       } else {
         console.error("Error updating profile:", data.message);
       }
@@ -78,12 +85,14 @@ const Profile = () => {
 
   return (
     <div>
-      <h2>Your Profile</h2>
+      <h1>Welcome, {state.user?.displayName || userProfile.displayName}</h1>
+
+      <h2>This is your profile</h2>
       <table>
         <tbody>
           <tr>
             <td>Username:</td>
-            <td>{userProfile.username}</td>
+            <td>{state.user?.username}</td>
           </tr>
           <tr>
             <td>displayName:</td>
