@@ -5,6 +5,7 @@ const PostsPage = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [sortOrder, setSortOrder] = useState("desc");
 
   const handleDelete = async (id) => {
     try {
@@ -127,8 +128,22 @@ const PostsPage = () => {
         });
 
         if (result.data && Array.isArray(result.data)) {
-          setPosts(result.data);
-          checkPostAttributes(result.data); // Vérification des attributs après avoir défini les articles
+          // Sort the posts here
+          const sortedPosts = result.data.slice(); // Create a copy of the array
+          sortedPosts.sort((a, b) => {
+            // Assuming you have a 'createdAt' field in your post attributes
+            const dateA = new Date(a.attributes.createdAt);
+            const dateB = new Date(b.attributes.createdAt);
+
+            if (sortOrder === "desc") {
+              return dateB - dateA; // Descending order
+            } else {
+              return dateA - dateB; // Ascending order
+            }
+          });
+
+          setPosts(sortedPosts);
+          checkPostAttributes(sortedPosts); // Vérification des attributs après avoir défini les articles
         } else {
           console.error("L'API n'a pas renvoyé le format attendu :", result);
           setError("Format de données inattendu.");
@@ -146,7 +161,7 @@ const PostsPage = () => {
     };
 
     fetchPosts();
-  }, []);
+  }, [sortOrder]);
 
   if (loading) {
     return <p>Chargement des posts...</p>;
@@ -163,12 +178,15 @@ const PostsPage = () => {
     }
   }
 
-
-const currentUserId = Number(localStorage.getItem("userId"));
+  const currentUserId = Number(localStorage.getItem("userId"));
 
   return (
     <div>
       <h1>Tous les posts</h1>
+      <div>
+        <button onClick={() => setSortOrder("desc")}>Tri par plus récents</button>
+        <button onClick={() => setSortOrder("asc")}>Tri par plus anciens</button>
+      </div>
       <ul>
         {posts.map((post) => (
           <li key={post.id}>
