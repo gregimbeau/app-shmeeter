@@ -25,35 +25,38 @@ const LoginForm = () => {
     }));
   };
 
-  const fetchUserProfile = async () => {
-    const token = Cookies.get("token");
+const fetchUserProfile = async () => {
+  const token = Cookies.get("token");
 
-    if (token) {
-      try {
-        const response = await fetch("http://localhost:1337/api/users/me", {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        });
+  if (token) {
+    try {
+      const response = await fetch("http://localhost:1337/api/users/me", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
 
-        if (!response.ok) {
-          const text = await response.text();
-          throw new Error(`HTTP error ${response.status}: ${text}`);
-        }
-
-        const userProfile = await response.json();
-        console.log("User profile:", userProfile);
-
-        // Vous pouvez, par exemple, sauvegarder ce profil dans un état ou effectuer d'autres traitements ici.
-      } catch (error) {
-        console.error("There was an error fetching user profile:", error);
+      if (!response.ok) {
+        const text = await response.text();
+        throw new Error(`HTTP error ${response.status}: ${text}`);
       }
-    } else {
-      console.log("No token found. User is not authenticated.");
+
+      const userProfile = await response.json();
+      console.log("User profile:", userProfile);
+
+      localStorage.setItem("userId", userProfile.id);
+
+      // You can, for example, save this profile to a state or do other processing here.
+    } catch (error) {
+      console.error("There was an error fetching user profile:", error);
     }
-  };
+  } else {
+    console.log("No token found. User is not authenticated.");
+  }
+};
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();

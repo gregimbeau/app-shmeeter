@@ -6,6 +6,27 @@ const PostsPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const handleDelete = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:1337/api/posts/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to delete post. Status: ${response.status}`);
+      }
+
+      const newPosts = posts.filter((post) => post.id !== id);
+      setPosts(newPosts);
+    } catch (error) {
+      console.error("Error deleting post:", error);
+      alert("Erreur lors de la suppression. Veuillez réessayer.");
+    }
+  };
+
   const updatePost = async (id, updatedFields) => {
     const post = posts.find((p) => p.id === id);
     if (!post) {
@@ -34,47 +55,46 @@ const PostsPage = () => {
     }
   };
 
-const handleLikeOrDislike = async (id, isLike = true) => {
-  const post = posts.find((p) => p.id === id);
+  const handleLikeOrDislike = async (id, isLike = true) => {
+    const post = posts.find((p) => p.id === id);
 
-  const updatedLikeCount = isLike
-    ? post.attributes.like + 1
-    : Math.max(post.attributes.like - 1, 0); // Ensure likes can't go negative
+    const updatedLikeCount = isLike
+      ? post.attributes.like + 1
+      : Math.max(post.attributes.like - 1, 0); // Ensure likes can't go negative
 
-  const optimisticPosts = posts.map((post) =>
-    post.id === id
-      ? {
-          ...post,
-          attributes: { ...post.attributes, like: updatedLikeCount },
-        }
-      : post
-  );
-  setPosts(optimisticPosts);
-
-  try {
-    const updatedPost = await updatePost(id, { like: updatedLikeCount });
-
-    if (!updatedPost) {
-      throw new Error("Failed to update post");
-    }
-  } catch (error) {
-    console.error("Error handling like/dislike:", error);
-    const revertedPosts = posts.map((post) =>
+    const optimisticPosts = posts.map((post) =>
       post.id === id
         ? {
             ...post,
-            attributes: { ...post.attributes, like: post.attributes.like },
+            attributes: { ...post.attributes, like: updatedLikeCount },
           }
         : post
     );
-    setPosts(revertedPosts);
-    alert("Erreur lors de la mise à jour. Veuillez réessayer.");
-  }
-};
+    setPosts(optimisticPosts);
 
-const handleLike = (id) => handleLikeOrDislike(id, true);
-const handleDislike = (id) => handleLikeOrDislike(id, false);
+    try {
+      const updatedPost = await updatePost(id, { like: updatedLikeCount });
 
+      if (!updatedPost) {
+        throw new Error("Failed to update post");
+      }
+    } catch (error) {
+      console.error("Error handling like/dislike:", error);
+      const revertedPosts = posts.map((post) =>
+        post.id === id
+          ? {
+              ...post,
+              attributes: { ...post.attributes, like: post.attributes.like },
+            }
+          : post
+      );
+      setPosts(revertedPosts);
+      alert("Erreur lors de la mise à jour. Veuillez réessayer.");
+    }
+  };
+
+  const handleLike = (id) => handleLikeOrDislike(id, true);
+  const handleDislike = (id) => handleLikeOrDislike(id, false);
 
   const checkPostAttributes = (posts) => {
     posts.forEach((post) => {
@@ -143,6 +163,9 @@ const handleDislike = (id) => handleLikeOrDislike(id, false);
     }
   }
 
+
+const currentUserId = Number(localStorage.getItem("userId"));
+
   return (
     <div>
       <h1>Tous les posts</h1>
@@ -156,6 +179,9 @@ const handleDislike = (id) => handleLikeOrDislike(id, false);
               onLike={() => handleLike(post.id)}
               onDislike={() => handleDislike(post.id)}
             />
+            {Number(post.attributes.author.data.id) === currentUserId ? (
+              <button onClick={() => handleDelete(post.id)}>Supprimer</button>
+            ) : null}
           </li>
         ))}
       </ul>
