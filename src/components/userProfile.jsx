@@ -10,50 +10,44 @@ const UserProfile = () => {
   // This is where you get your JWT. In this example, it's fetched from localStorage.
   const jwt = localStorage.getItem("jwt");
 
-  useEffect(() => {
-    const fetchUserProfile = async () => {
-      let userId;
-      if (username) {
-        userId = await fetchUserIdByUsername(username);
-        if (!userId) {
-          console.error("Username not found:", username);
-          return;
-        }
-      } else {
-        console.error("No valid username provided.");
+useEffect(() => {
+  const fetchUserProfile = async () => {
+    let userId;
+    if (username) {
+      userId = await fetchUserIdByUsername(username);
+      if (!userId) {
+        console.error("Username not found:", username);
         return;
       }
+    } else {
+      console.error("No valid username provided.");
+      return;
+    }
 
-      const headers = {
-        Authorization: `Bearer ${jwt}`,
-      };
-
-      // Fetch user's profile based on ID
-      const userResponse = await fetch(
-        `http://localhost:1337/api/users/${userId}`,
-        { headers }
-      );
-      const userData = await userResponse.json();
-      setUser(userData);
-
-      // Fetch all posts
-      const postsResponse = await fetch(
-        `http://localhost:1337/api/posts/?populate=author`,
-        { headers }
-      );
-      const allPosts = await postsResponse.json();
-
-      const userPosts = allPosts.data.filter( /// so what..??? it works... my strapi had issues and i took a shortcut :-) be nice it's a small db
-        (post) =>
-          post.attributes.author.data.attributes.displayName ===
-          (userData.displayName || userData.username)
-      );
-
-      setPosts(userPosts);
+    const headers = {
+      Authorization: `Bearer ${jwt}`,
     };
 
-    fetchUserProfile();
-  }, [username, jwt]);
+    // Fetch user's profile based on ID
+    const userResponse = await fetch(
+      `http://localhost:1337/api/users/${userId}`,
+      { headers }
+    );
+    const userData = await userResponse.json();
+    setUser(userData);
+
+    // Fetch user's posts using the filter
+    const postsResponse = await fetch(
+      `http://localhost:1337/api/posts?filters[author][id][$eq]=${userId}`,
+      { headers }
+    );
+    const userPosts = await postsResponse.json();
+
+    setPosts(userPosts.data); // Assuming the posts are inside the 'data' key of the response
+  };
+
+  fetchUserProfile();
+}, [username, jwt]);
 
   return (
     <div>
