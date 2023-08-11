@@ -72,6 +72,8 @@ const Profile = () => {
       const data = await response.json();
       if (data.id) {
         console.log("Profile updated!");
+
+        setUserProfile((prev) => ({ ...prev, ...formData }));
         dispatch({ type: "SET_USER", payload: formData }); // Update the global state after profile is updated
       } else {
         console.error("Error updating profile:", data.message);
@@ -85,7 +87,7 @@ const Profile = () => {
 
   return (
     <div>
-      <h1>Welcome, {state.user?.displayName || userProfile.displayName}</h1>
+      <h1>Welcome, {userProfile.displayName}</h1>
 
       <h2>This is your profile</h2>
       <table>
