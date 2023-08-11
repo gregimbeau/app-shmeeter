@@ -12,7 +12,7 @@ const PostsPage = () => {
   const [sortOrder, setSortOrder] = useState("desc");
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
   const [userLikes, setUserLikes] = useState({});
-  
+
   const handleDelete = async (id) => {
     try {
       const response = await fetch(`http://localhost:1337/api/posts/${id}`, {
@@ -98,10 +98,10 @@ const PostsPage = () => {
       setPosts(revertedPosts);
       alert("Erreur lors de la mise à jour. Veuillez réessayer.");
     }
-      setUserLikes((prev) => ({
-        ...prev,
-        [id]: isLike ? "liked" : "disliked",
-      }));
+    setUserLikes((prev) => ({
+      ...prev,
+      [id]: isLike ? "liked" : "disliked",
+    }));
   };
 
   const handleLike = (id) => handleLikeOrDislike(id, true);
@@ -119,8 +119,9 @@ const PostsPage = () => {
 
   const fetchPosts = async () => {
     try {
+      
       const response = await fetch(
-        "http://localhost:1337/api/posts?populate=author"
+        `http://localhost:1337/api/posts?sort=createdAt:${sortOrder}&populate=author`
       );
       const result = await response.json();
       console.log(result);
@@ -168,31 +169,37 @@ const PostsPage = () => {
       setLoading(false);
     }
   };
-  useEffect(() => {
-    const token = localStorage.getItem("jwt");
-    if (token) {
-      setIsUserLoggedIn(true);
-    }
 
-    fetchPosts();
-  }, [sortOrder]);
-
-  if (loading) {
-    return <p>Chargement des posts...</p>;
+useEffect(() => {
+  const token = localStorage.getItem("jwt");
+  if (token) {
+    setIsUserLoggedIn(true);
   }
 
-  if (error) {
-    return <p>Erreur lors du chargement des posts: {error}</p>;
-  }
-  function getDisplayName(post) {
-    try {
-      return post.attributes.author.data.attributes.displayName || "Sans nom";
-    } catch (error) {
-      return "Sans nom";
-    }
-  }
+  fetchPosts();
+}, [sortOrder]);
+
+if (loading) {
+  return <p>Chargement des posts...</p>;
+}
+
+if (error) {
+  return <p>Erreur lors du chargement des posts: {error}</p>;
+}
+  
+function getDisplayName(post) {
+  const displayName =
+    post?.attributes?.author?.data?.attributes?.displayName || "Sans nom";
+  return displayName;
+}
+
 
   const currentUserId = Number(localStorage.getItem("userId"));
+  function safelyAccess(obj, path) {
+    return path.split(".").reduce((acc, segment) => {
+      return acc && acc[segment];
+    }, obj);
+  }
 
   return (
     <div>
@@ -237,7 +244,7 @@ const PostsPage = () => {
                   likedStatus={userLikes[post.id]}
                 />
 
-                {Number(post.attributes.author.data.id) === currentUserId ? (
+                {Number(post.attributes?.author?.data?.id) === currentUserId ? (
                   <button onClick={() => handleDelete(post.id)}>
                     Supprimer
                   </button>
