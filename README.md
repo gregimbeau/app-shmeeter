@@ -1,8 +1,41 @@
-# React + Vite
+# Mini Social Network
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 1. Introduction
+A mini social network using react+vite+redux and strapi
 
-Currently, two official plugins are available:
+## 2. The Project
+The goal of this project is to set up a quasi-Twitter. This app is minimalist and  feature:
+- User authentication (Sign up, Log in, Log out)
+- Profile display and editing
+- The ability to create posts
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### 2.1. Features
+
+#### 2.1.1. Registration
+- Route: `/register`
+- Data: username, email, password
+
+#### 2.1.2. Login
+- Data: identifier (email or username), password
+
+#### 2.1.3. Profile
+
+#### 2.1.4. Home Page (and posts)
+For logged in users:
+- A text input to write a post.
+- List of posts in descending order.
+- Their own posts among existing ones.
+- Clickable usernames that redirect to the writer's profile.
+For logged out users: 
+- A basic explanatory home page text.
+
+#### 2.1.5. Author's Profile
+
+#### 2.1.6. Other Features
+For logged in users:
+- Like and unlike posts.
+- Delete their own posts.
+- Logout.
+
+#### 2.1.7. Optimization Tips
+- Sort by creation date
