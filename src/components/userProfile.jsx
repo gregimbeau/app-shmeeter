@@ -49,41 +49,62 @@ useEffect(() => {
   fetchUserProfile();
 }, [username, jwt]);
 
-  return (
-    <div>
-      {user && (
-        <div>
-          <h1>{user.displayName || user.username}</h1>
-          <table>
-            <tbody>
-              <tr>
-                <td>Username:</td>
-                <td>{user.username}</td>
-              </tr>
-              <tr>
-                <td>Display Name:</td>
-                <td>{user.displayName}</td>
-              </tr>
-              <tr>
-                <td>Email:</td>
-                <td>{user.email}</td>
-              </tr>
-              <tr>
-                <td>Description:</td>
-                <td>{user.description}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      )}
-      <h2>User Posts:</h2>
-      <ul>
-        {posts.map((post) => (
-          <li key={post.id}>{post.attributes.text}</li>
-        ))}
-      </ul>
-    </div>
-  );
+ return (
+   <div className='container user-profile-container'>
+     <div className='row'>
+       <div className='col-6'>
+         {" "}
+         {/* Assuming you want a centered two-column layout */}
+         {user && (
+           <div className='user-content'>
+             <div className='user-header'>
+               {/* Assuming you might want to display user avatar in the future */}
+               {/* <img src={user.avatarUrl} alt="User Avatar" className="avatar" /> */}
+               <h1>{user.displayName || user.username}</h1>
+             </div>
+
+             <table>
+               <thead>
+                 <tr>
+                   <th>Attribute</th>
+                   <th>Value</th>
+                 </tr>
+               </thead>
+               <tbody>
+                 <tr>
+                   <td>Username:</td>
+                   <td>{user.username}</td>
+                 </tr>
+                 <tr>
+                   <td>Display Name:</td>
+                   <td>{user.displayName}</td>
+                 </tr>
+                 <tr>
+                   <td>Email:</td>
+                   <td>{user.email}</td>
+                 </tr>
+                 <tr>
+                   <td>Description:</td>
+                   <td>{user.description}</td>
+                 </tr>
+               </tbody>
+             </table>
+           </div>
+         )}
+         <div className='user-posts'>
+           <h2>User Posts:</h2>
+           <ul>
+             {posts.map((post) => (
+               <li key={post.id}>{post.attributes.text}</li>
+             ))}
+           </ul>
+         </div>
+       </div>
+     </div>
+   </div>
+ );
+
+
 };
 
 export default UserProfile;

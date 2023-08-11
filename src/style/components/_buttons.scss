@@ -1,0 +1,32 @@
+// components/_buttons.scss
+
+.button,
+.btn {
+    display: inline-block;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+    &--primary {
+        background-color: $primary;
+        color: white;
+
+        &:hover {
+            background-color: darken($primary, 10%);
+        }
+    }
+
+    &--secondary {
+        background-color: $secondary;
+        color: white;
+
+        &:hover {
+            background-color: darken($secondary, 10%);
+        }
+    }
+}
+

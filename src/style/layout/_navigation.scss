@@ -1,0 +1,18 @@
+// layout/_navigation.scss
+
+.nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: $bg-primary;
+    padding: 10px 20px;
+    
+    .nav-item {
+        margin: 0 10px;
+
+        &.active,
+        &:hover {
+            color: $accent-color;
+        }
+    }
+}

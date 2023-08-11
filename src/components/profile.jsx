@@ -85,58 +85,77 @@ const Profile = () => {
 
   if (!userProfile) return <p>You must log in first...</p>;
 
-  return (
-    <div>
-      <h1>Welcome, {userProfile.displayName}</h1>
+ return (
+   <div className='container'>
+     <div className='row'>
+       <div className='col-6 col-offset-3'>
+         {" "}
+         {/* Assuming you use a 12 column grid */}
+         <div className='profile-container'>
+           <div className='profile-header'>
+             <h1>Welcome, {userProfile.displayName}</h1>
+           </div>
 
-      <h2>This is your profile</h2>
-      <table>
-        <tbody>
-          <tr>
-            <td>Username:</td>
-            <td>{state.user?.username}</td>
-          </tr>
-          <tr>
-            <td>displayName:</td>
-            <td>{userProfile.displayName}</td>
-          </tr>
-          <tr>
-            <td>Email:</td>
-            <td>{userProfile.email}</td>
-          </tr>
-          <tr>
-            <td>Role:</td>
-            <td>{userProfile.description}</td>
-          </tr>
-        </tbody>
-      </table>
-      <h2>Edit Profile</h2>
-      <form onSubmit={handleProfileUpdate}>
-        <div>
-          <label>displayName:</label>
-          <input
-            type='text'
-            name='displayName'
-            value={formData.displayName}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          <label>description:</label>
-          <textarea
-            name='description'
-            rows='5'
-            cols='50'
-            value={formData.description}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <button type='submit'>Update Profile</button>
-      </form>
-    </div>
-  );
+           <div className='profile-content'>
+             <h2>This is your profile</h2>
+
+             <table>
+               <tbody>
+                 <tr>
+                   <td>Username:</td>
+                   <td>{state.user?.username}</td>
+                 </tr>
+                 <tr>
+                   <td>displayName:</td>
+                   <td>{userProfile.displayName}</td>
+                 </tr>
+                 <tr>
+                   <td>Email:</td>
+                   <td>{userProfile.email}</td>
+                 </tr>
+                 <tr>
+                   <td>Role:</td>
+                   <td>{userProfile.description}</td>
+                 </tr>
+               </tbody>
+             </table>
+
+             <h2>Edit Profile</h2>
+
+             <form onSubmit={handleProfileUpdate}>
+               <div className='form-group'>
+                 <label>displayName:</label>
+                 <input
+                   type='text'
+                   name='displayName'
+                   value={formData.displayName}
+                   onChange={handleChange}
+                   required
+                 />
+               </div>
+
+               <div className='form-group'>
+                 <label>description:</label>
+                 <textarea
+                   name='description'
+                   rows='5'
+                   value={formData.description}
+                   onChange={handleChange}
+                   required
+                 />
+               </div>
+
+               <button className='btn btn--primary' type='submit'>
+                 Update Profile
+               </button>
+             </form>
+           </div>
+         </div>
+       </div>
+     </div>
+   </div>
+ );
+
 };
 
 export default Profile;

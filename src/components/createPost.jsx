@@ -14,13 +14,16 @@ const CreatePost = ({ onPostCreated, onRefreshPosts }) => {
     if (token) {
       try {
         setLoading(true); // start loading
-        const response = await fetch("https://app-shmeeter-server-production.up.railway.app/api/users/me", {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await fetch(
+          "https://app-shmeeter-server-production.up.railway.app/api/users/me",
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
         if (!response.ok) {
           const text = await response.text();
@@ -72,14 +75,17 @@ const CreatePost = ({ onPostCreated, onRefreshPosts }) => {
     };
     console.log(postData);
     try {
-      const response = await fetch("https://app-shmeeter-server-production.up.railway.app/api/posts", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${currentJwtToken}`,
-        },
-        body: JSON.stringify(requestBody),
-      });
+      const response = await fetch(
+        "https://app-shmeeter-server-production.up.railway.app/api/posts",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${currentJwtToken}`,
+          },
+          body: JSON.stringify(requestBody),
+        }
+      );
 
       if (response.ok) {
         const responseData = await response.json();
@@ -114,28 +120,37 @@ const CreatePost = ({ onPostCreated, onRefreshPosts }) => {
   }, []);
   console.log("Loading:", loading);
 
-  return (
-    <div>
-      <h3>Create a Post</h3>
-      {message && <div className='success'>{message}</div>}
-      {error && <div className='error'>{error}</div>}{" "}
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>text:</label>
-          <input
-            type='text'
-            name='text'
-            value={postData.text}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <button type='submit' disabled={loading || !userProfile}>
-          Publish
-        </button>
-      </form>
-    </div>
-  );
+return (
+  <div className='posts-container'>
+    <h3>Create a Post</h3>
+
+    {message && <div className='success'>{message}</div>}
+    {error && <div className='error'>{error}</div>}
+
+    <form onSubmit={handleSubmit} className='form-group'>
+      <div>
+        <label>Text:</label>
+        <input
+          type='text'
+          name='text'
+          value={postData.text}
+          onChange={handleChange}
+          required
+          className='form-input' // Add class for styling
+        />
+      </div>
+
+      <button
+        type='submit'
+        className='btn btn--primary' // Apply button styles
+        disabled={loading || !userProfile}>
+        Publish
+      </button>
+    </form>
+  </div>
+);
+
+
 };
 
 export default CreatePost;

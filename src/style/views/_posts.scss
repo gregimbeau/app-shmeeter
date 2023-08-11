@@ -1,0 +1,24 @@
+// views/_posts.scss
+
+.post {
+  padding: 10px;
+  border-bottom: 1px solid $text-secondary;
+  display: flex;
+  justify-content: space-between;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  img.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+
+  .post-content {
+    flex-grow: 1;
+    margin-left: 10px;
+  }
+}

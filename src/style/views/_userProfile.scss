@@ -1,0 +1,21 @@
+// views/_userProfile.scss
+
+.user-profile-container {
+    padding: 20px;
+
+    .user-header {
+        display: flex;
+        align-items: center;
+
+        img.avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+    }
+
+    .user-content {
+        margin-top: 20px;
+    }
+}

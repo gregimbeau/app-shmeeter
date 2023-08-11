@@ -1,0 +1,27 @@
+// components/_forms.scss
+
+input,
+textarea,
+select {
+    width: 30%;
+    padding: 0px 0px 8px 12px;
+    border: 1px solid $text-secondary;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: border-color 0.3s;
+
+    &:focus {
+        border-color: $primary;
+        outline: none;
+    }
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}

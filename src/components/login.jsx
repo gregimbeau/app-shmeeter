@@ -98,7 +98,8 @@ const fetchUserProfile = async () => {
   };
 
   return (
-    <div>
+
+    <div className="container">
       <h2>Login</h2>
       {errorMsg && <p style={{ color: "red" }}>{errorMsg}</p>}
       <form onSubmit={handleSubmit}>

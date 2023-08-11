@@ -15,12 +15,15 @@ const PostsPage = () => {
 
   const handleDelete = async (id) => {
     try {
-      const response = await fetch(`https://app-shmeeter-server-production.up.railway.app/api/posts/${id}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await fetch(
+        `https://app-shmeeter-server-production.up.railway.app/api/posts/${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`Failed to delete post. Status: ${response.status}`);
@@ -42,13 +45,16 @@ const PostsPage = () => {
     }
 
     try {
-      const response = await fetch(`https://app-shmeeter-server-production.up.railway.app/api/posts/${id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ data: updatedFields }),
-      });
+      const response = await fetch(
+        `https://app-shmeeter-server-production.up.railway.app/api/posts/${id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ data: updatedFields }),
+        }
+      );
 
       if (!response.ok) {
         console.error("Error body:", await response.text());
@@ -119,7 +125,6 @@ const PostsPage = () => {
 
   const fetchPosts = async () => {
     try {
-      
       const response = await fetch(
         `https://app-shmeeter-server-production.up.railway.app/api/posts?sort=createdAt:${sortOrder}&populate=author`
       );
@@ -170,29 +175,28 @@ const PostsPage = () => {
     }
   };
 
-useEffect(() => {
-  const token = localStorage.getItem("jwt");
-  if (token) {
-    setIsUserLoggedIn(true);
+  useEffect(() => {
+    const token = localStorage.getItem("jwt");
+    if (token) {
+      setIsUserLoggedIn(true);
+    }
+
+    fetchPosts();
+  }, [sortOrder]);
+
+  if (loading) {
+    return <p>Chargement des posts...</p>;
   }
 
-  fetchPosts();
-}, [sortOrder]);
+  if (error) {
+    return <p>Erreur lors du chargement des posts: {error}</p>;
+  }
 
-if (loading) {
-  return <p>Chargement des posts...</p>;
-}
-
-if (error) {
-  return <p>Erreur lors du chargement des posts: {error}</p>;
-}
-  
-function getDisplayName(post) {
-  const displayName =
-    post?.attributes?.author?.data?.attributes?.displayName || "Sans nom";
-  return displayName;
-}
-
+  function getDisplayName(post) {
+    const displayName =
+      post?.attributes.author.data.attributes.displayName || "Sans nom";
+    return displayName;
+  }
 
   const currentUserId = Number(localStorage.getItem("userId"));
   function safelyAccess(obj, path) {
@@ -201,32 +205,42 @@ function getDisplayName(post) {
     }, obj);
   }
 
-  return (
-    <div>
-      <section>
-        <h1>Welcome on My Social Network.</h1>
-        <h4>
-          This website is a training to React, global state handling and tokens.
-          Here, authentification and routing will be used to create a small
-          social media website.
-        </h4>
-      </section>
-      <CreatePost onRefreshPosts={fetchPosts} />
+return (
+  <div className='container'>
+    <section>
+      <h1>Welcome on My Social Network.</h1>
+      <h4>
+        This website is a training to React, global state handling, and tokens.
+        Here, authentication and routing will be used to create a small social
+        media website.
+      </h4>
+    </section>
 
-      {isUserLoggedIn ? (
-        <>
-          <div>
-            <button onClick={() => setSortOrder("desc")}>
-              Tri par plus récents
-            </button>
-            <button onClick={() => setSortOrder("asc")}>
-              Tri par plus anciens
-            </button>
-          </div>
-          <ul>
-            {posts.map((post) => (
-              <li key={post.id}>
-                <h2>
+    <CreatePost onRefreshPosts={fetchPosts} />
+
+    {isUserLoggedIn ? (
+      <>
+        <div className='button-group'>
+          <button
+            className='btn btn--primary'
+            onClick={() => setSortOrder("desc")}>
+            Tri par plus récents
+          </button>
+          <button
+            className='btn btn--secondary'
+            onClick={() => setSortOrder("asc")}>
+            Tri par plus anciens
+          </button>
+        </div>
+
+        <ul className='post-list'>
+          {posts.map((post) => (
+            <li key={post.id} className='post'>
+              {/* Assuming you might have an avatar image for the post author */}
+              {/* <img src={postAuthorAvatar} alt="Author's avatar" className="avatar" /> */}
+
+              <div className='post-content'>
+                <h2 className='post-title'>
                   {post.attributes.author.data.attributes.username ? (
                     <Link
                       to={`/user/${post.attributes.author.data.attributes.username}`}>
@@ -236,8 +250,11 @@ function getDisplayName(post) {
                     "Nom d'utilisateur non disponible"
                   )}
                 </h2>
-                <p>{post.attributes?.text || "Sans titre"}</p>
+                <p className='post-text'>
+                  {post.attributes?.text || "Sans titre"}
+                </p>
                 <Likes
+                  className='likes'
                   likesCount={post.attributes?.like}
                   onLike={() => handleLike(post.id)}
                   onDislike={() => handleDislike(post.id)}
@@ -245,19 +262,24 @@ function getDisplayName(post) {
                 />
 
                 {Number(post.attributes?.author?.data?.id) === currentUserId ? (
-                  <button onClick={() => handleDelete(post.id)}>
+                  <button
+                    className='btn btn--delete'
+                    onClick={() => handleDelete(post.id)}>
                     Supprimer
                   </button>
                 ) : null}
-              </li>
-            ))}
-          </ul>
-        </>
-      ) : (
-        <p>Please log in to view posts.</p>
-      )}
-    </div>
-  );
+              </div>
+            </li>
+          ))}
+        </ul>
+      </>
+    ) : (
+      <p className='login-reminder'>Please log in to view posts.</p>
+    )}
+  </div>
+);
+
+
 };
 
 export default PostsPage;

@@ -13,26 +13,32 @@ const handleLogout = () => {
   Cookies.remove("token");
   navigate("/"); // Redirect to login after logout
 };
-  return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        padding: "10px 50px",
-        borderBottom: "1px solid #ccc",
-      }}>
-      <button onClick={() => navigate("/")}>Home</button>
-      <button onClick={() => navigate("/form")}>S'inscrire</button>
-      {!jwt ? (
-        <button onClick={() => navigate("/login")}>Login</button>
-      ) : (
-        <button onClick={handleLogout}>Logout</button>
-      )}
-      <button onClick={() => navigate("/profile")}>Profile</button>
-
-      {/* <button onClick={() => navigate("/createPost")}>Créer un post</button> */}
+return (
+  <div className='header'>
+    <div className='container'>
+      <div className='nav'>
+        <button className='nav-item' onClick={() => navigate("/")}>
+          Home
+        </button>
+        <button className='nav-item' onClick={() => navigate("/form")}>
+          S'inscrire
+        </button>
+        {!jwt ? (
+          <button className='nav-item' onClick={() => navigate("/login")}>
+            Login
+          </button>
+        ) : (
+          <button className='nav-item' onClick={handleLogout}>
+            Logout
+          </button>
+        )}
+        <button className='nav-item' onClick={() => navigate("/profile")}>
+          Profile
+        </button>
+      </div>
     </div>
-  );
+  </div>
+);
 };
 
 export default Header;

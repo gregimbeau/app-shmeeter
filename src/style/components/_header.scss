@@ -1,0 +1,49 @@
+// components/_header.scss
+
+.header {
+  display: flex;
+  align-items: left;
+  justify-content: center;
+  background-color: $bg-primary;
+  border-bottom: 1px solid $text-secondary;
+  padding: 10px 20px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  height: 70px;
+  .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .nav {
+    display: flex;
+    align-items: left;
+
+    .nav-item {
+      margin-right: 20px;
+      padding: 10px 15px;
+      border-radius: 20px;
+      transition: background-color 0.3s;
+
+      &:hover {
+        background-color: lighten($bg-primary, 5%);
+      }
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+
+    button {
+      background: none;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+      color: $primary;
+      font-size: 16px;
+      outline: none;
+    }
+  }
+}

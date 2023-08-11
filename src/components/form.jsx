@@ -65,45 +65,50 @@ const handleSubmit = (e) => {
 };
 
 
-  return (
-    <div>
-      <h2>Inscription</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Username:</label>
-          <input
-            type='text'
-            name='username'
-            value={formData.username}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          <label>Email:</label>
-          <input
-            type='email'
-            name='email'
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          <label>Password:</label>
-          <input
-            type='password'
-            name='password'
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <input type='hidden' name='role' value={formData.role} />
-        <button type='submit'>S'inscrire</button>
-      </form>
-    </div>
-  );
+return (
+  <div className='container'>
+    <h2>Inscription</h2>
+    <form onSubmit={handleSubmit} className='col-6'>
+      {" "}
+      {/* A half-width form */}
+      <div className='form-group'>
+        <label>Username:</label>
+        <input
+          type='text'
+          name='username'
+          value={formData.username}
+          onChange={handleChange}
+          required
+        />
+      </div>
+      <div className='form-group'>
+        <label>Email:</label>
+        <input
+          type='email'
+          name='email'
+          value={formData.email}
+          onChange={handleChange}
+          required
+        />
+      </div>
+      <div className='form-group'>
+        <label>Password:</label>
+        <input
+          type='password'
+          name='password'
+          value={formData.password}
+          onChange={handleChange}
+          required
+        />
+      </div>
+      <input type='hidden' name='role' value={formData.role} />
+      <button className='btn btn--primary' type='submit'>
+        S'inscrire
+      </button>
+    </form>
+  </div>
+);
+
 };
 
 export default InscriptionForm;

@@ -1,0 +1,111 @@
+// views/_modal.scss
+
+.modal-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+}
+
+.modal-container {
+  background-color: #fff;
+  width: 60%;
+  max-width: 500px;
+  border-radius: 5px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 999;
+  max-height: 100vh;
+  overflow-y: auto;
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    button {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+
+      &:hover {
+        color: #888;
+      }
+    }
+  }
+
+  .modal-content {
+    margin-top: 20px;
+    max-height: 70vh;
+    overflow-y: auto;
+    
+    // Style for form elements
+    form {
+      display: flex;
+      flex-direction: column;
+      align-items: center; // This will center the fields
+
+      label {
+        margin-bottom: 15px;
+        font-size: 0.9rem;
+        width: 70%; // Set the width to 70% of the modal
+
+        & > input[type="text"],
+        & > input[type="email"],
+        & > select {
+          width: 100%; // This will now be 100% of the label's width, which is 70% of the modal
+          padding: 10px;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          font-size: 0.9rem;
+        }
+
+        // Styling radio and checkbox groups
+        &.checkbox-group, &.radio-group {
+          display: flex;
+          justify-content: start;
+          align-items: center;
+          gap: 10px;
+
+          input[type="checkbox"],
+          input[type="radio"] {
+            margin-right: 5px;
+          }
+        }
+      }
+
+      button[type="submit"] {
+        margin-top: 20px;
+        padding: 10px 15px;
+        background-color: #007BFF;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+
+        &:hover {
+          background-color: #0056b3;
+        }
+      }
+    }
+  }
+}
+
+// Styles for hiding scrollbar
+.modal-content {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+    &::-webkit-scrollbar {
+        width: 0;
+        height: 0;
+    }
+}
