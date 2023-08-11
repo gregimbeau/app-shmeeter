@@ -11,7 +11,8 @@ const PostsPage = () => {
   const [error, setError] = useState(null);
   const [sortOrder, setSortOrder] = useState("desc");
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
-
+  const [userLikes, setUserLikes] = useState({});
+  
   const handleDelete = async (id) => {
     try {
       const response = await fetch(`http://localhost:1337/api/posts/${id}`, {
@@ -97,6 +98,10 @@ const PostsPage = () => {
       setPosts(revertedPosts);
       alert("Erreur lors de la mise à jour. Veuillez réessayer.");
     }
+      setUserLikes((prev) => ({
+        ...prev,
+        [id]: isLike ? "liked" : "disliked",
+      }));
   };
 
   const handleLike = (id) => handleLikeOrDislike(id, true);
@@ -112,63 +117,62 @@ const PostsPage = () => {
     });
   };
 
+  const fetchPosts = async () => {
+    try {
+      const response = await fetch(
+        "http://localhost:1337/api/posts?populate=author"
+      );
+      const result = await response.json();
+      console.log(result);
 
-   const fetchPosts = async () => {
-     try {
-       const response = await fetch(
-         "http://localhost:1337/api/posts?populate=author"
-       );
-       const result = await response.json();
-       console.log(result);
+      const ids = new Set();
+      result.data.forEach((post) => {
+        if (!post.id) {
+          console.error("Un post n'a pas d'ID:", post);
+        } else if (ids.has(post.id)) {
+          console.error("Duplication d'ID détectée pour le post:", post);
+        } else {
+          ids.add(post.id);
+        }
+      });
 
-       const ids = new Set();
-       result.data.forEach((post) => {
-         if (!post.id) {
-           console.error("Un post n'a pas d'ID:", post);
-         } else if (ids.has(post.id)) {
-           console.error("Duplication d'ID détectée pour le post:", post);
-         } else {
-           ids.add(post.id);
-         }
-       });
+      if (result.data && Array.isArray(result.data)) {
+        // Sort the posts here
+        const sortedPosts = result.data.slice(); // Create a copy of the array
+        sortedPosts.sort((a, b) => {
+          // Assuming you have a 'createdAt' field in your post attributes
+          const dateA = new Date(a.attributes.createdAt);
+          const dateB = new Date(b.attributes.createdAt);
 
-       if (result.data && Array.isArray(result.data)) {
-         // Sort the posts here
-         const sortedPosts = result.data.slice(); // Create a copy of the array
-         sortedPosts.sort((a, b) => {
-           // Assuming you have a 'createdAt' field in your post attributes
-           const dateA = new Date(a.attributes.createdAt);
-           const dateB = new Date(b.attributes.createdAt);
+          if (sortOrder === "desc") {
+            return dateB - dateA; // Descending order
+          } else {
+            return dateA - dateB; // Ascending order
+          }
+        });
 
-           if (sortOrder === "desc") {
-             return dateB - dateA; // Descending order
-           } else {
-             return dateA - dateB; // Ascending order
-           }
-         });
-
-         setPosts(sortedPosts);
-         checkPostAttributes(sortedPosts); // Vérification des attributs après avoir défini les articles
-       } else {
-         console.error("L'API n'a pas renvoyé le format attendu :", result);
-         setError("Format de données inattendu.");
-       }
-
-       setLoading(false);
-     } catch (error) {
-       console.error(
-         "Une erreur s'est produite lors de la récupération des articles :",
-         error
-       );
-       setError("Erreur lors de la récupération des articles.");
-       setLoading(false);
-     }
-   };
-  useEffect(() => {
-      const token = localStorage.getItem("jwt");
-      if (token) {
-        setIsUserLoggedIn(true);
+        setPosts(sortedPosts);
+        checkPostAttributes(sortedPosts); // Vérification des attributs après avoir défini les articles
+      } else {
+        console.error("L'API n'a pas renvoyé le format attendu :", result);
+        setError("Format de données inattendu.");
       }
+
+      setLoading(false);
+    } catch (error) {
+      console.error(
+        "Une erreur s'est produite lors de la récupération des articles :",
+        error
+      );
+      setError("Erreur lors de la récupération des articles.");
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    const token = localStorage.getItem("jwt");
+    if (token) {
+      setIsUserLoggedIn(true);
+    }
 
     fetchPosts();
   }, [sortOrder]);
@@ -194,11 +198,11 @@ const PostsPage = () => {
     <div>
       <section>
         <h1>Welcome on My Social Network.</h1>
-        <h2>
+        <h4>
           This website is a training to React, global state handling and tokens.
           Here, authentification and routing will be used to create a small
           social media website.
-        </h2>
+        </h4>
       </section>
       <CreatePost onRefreshPosts={fetchPosts} />
 
@@ -230,7 +234,9 @@ const PostsPage = () => {
                   likesCount={post.attributes?.like}
                   onLike={() => handleLike(post.id)}
                   onDislike={() => handleDislike(post.id)}
+                  likedStatus={userLikes[post.id]}
                 />
+
                 {Number(post.attributes.author.data.id) === currentUserId ? (
                   <button onClick={() => handleDelete(post.id)}>
                     Supprimer

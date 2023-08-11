@@ -7,56 +7,53 @@ const UserProfile = () => {
   const [user, setUser] = useState(null);
   const [posts, setPosts] = useState([]);
 
+  // This is where you get your JWT. In this example, it's fetched from localStorage.
+  const jwt = localStorage.getItem("jwt");
+
   useEffect(() => {
     const fetchUserProfile = async () => {
-      let endpoint;
-
+      let userId;
       if (username) {
-        // Fetch user ID based on username
-        const userId = await fetchUserIdByUsername(username);
-
+        userId = await fetchUserIdByUsername(username);
         if (!userId) {
           console.error("Username not found:", username);
           return;
         }
-
-        endpoint = `http://localhost:1337/api/users/${userId}`;
       } else {
         console.error("No valid username provided.");
         return;
       }
 
-      // Fetch user profile based on ID or username
-      const response = await fetch(endpoint);
+      const headers = {
+        Authorization: `Bearer ${jwt}`,
+      };
 
-      if (!response.ok) {
-        console.error("Server response error", response.statusText);
-        return;
-      }
+      // Fetch user's profile based on ID
+      const userResponse = await fetch(
+        `http://localhost:1337/api/users/${userId}`,
+        { headers }
+      );
+      const userData = await userResponse.json();
+      setUser(userData);
 
-      try {
-        const data = await response.json();
-        setUser(data);
+      // Fetch all posts
+      const postsResponse = await fetch(
+        `http://localhost:1337/api/posts/?populate=author`,
+        { headers }
+      );
+      const allPosts = await postsResponse.json();
 
-        // Fetch user's posts
-        const postsResponse = await fetch(
-          `http://localhost:1337/api/posts?author=${data.id}`
-        );
+      const userPosts = allPosts.data.filter( /// so what..??? it works... my strapi had issues and i took a shortcut :-) be nice it's a small db
+        (post) =>
+          post.attributes.author.data.attributes.displayName ===
+          (userData.displayName || userData.username)
+      );
 
-        if (!postsResponse.ok) {
-          console.error("Error fetching posts:", postsResponse.statusText);
-          return;
-        }
-
-        const postsData = await postsResponse.json();
-        setPosts(postsData.data);
-      } catch (error) {
-        console.error("Error parsing JSON:", error);
-      }
+      setPosts(userPosts);
     };
 
     fetchUserProfile();
-  }, [username]);
+  }, [username, jwt]);
 
   return (
     <div>

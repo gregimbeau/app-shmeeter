@@ -94,6 +94,7 @@ const CreatePost = ({ onPostCreated, onRefreshPosts }) => {
           onRefreshPosts(); // Refresh posts after successfully creating a new one
 
           navigate("/posts"); // navigate to the posts page
+          setPostData((prev) => ({ ...prev, text: "" })); // réinitialiser le texte
         } else {
           throw new Error("Unexpected response format from the server.");
         }
@@ -115,7 +116,7 @@ const CreatePost = ({ onPostCreated, onRefreshPosts }) => {
 
   return (
     <div>
-      <h2>Create a Post</h2>
+      <h3>Create a Post</h3>
       {message && <div className='success'>{message}</div>}
       {error && <div className='error'>{error}</div>}{" "}
       <form onSubmit={handleSubmit}>
