@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 
-const CreatePost = () => {
+const CreatePost = ({ onPostCreated, onRefreshPosts }) => {
   const navigate = useNavigate();
   const [message, setMessage] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -61,6 +61,7 @@ const CreatePost = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     const currentJwtToken = Cookies.get("token");
 
     const requestBody = {
@@ -84,6 +85,14 @@ const CreatePost = () => {
         const responseData = await response.json();
         if (responseData && responseData.data) {
           setMessage("Votre post a été créé avec succès!");
+          if (typeof onPostCreated === "function") {
+            onPostCreated({
+              ...responseData.data,
+              userDisplayName: userDisplayName,
+            });
+          }
+          onRefreshPosts(); // Refresh posts after successfully creating a new one
+
           navigate("/posts"); // navigate to the posts page
         } else {
           throw new Error("Unexpected response format from the server.");

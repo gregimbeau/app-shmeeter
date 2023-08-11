@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import UserProfile from "./userProfile";
+import CreatePost from "@/components/createPost";
 
 import Likes from "./likes.jsx";
 
@@ -111,62 +112,63 @@ const PostsPage = () => {
     });
   };
 
+
+   const fetchPosts = async () => {
+     try {
+       const response = await fetch(
+         "http://localhost:1337/api/posts?populate=author"
+       );
+       const result = await response.json();
+       console.log(result);
+
+       const ids = new Set();
+       result.data.forEach((post) => {
+         if (!post.id) {
+           console.error("Un post n'a pas d'ID:", post);
+         } else if (ids.has(post.id)) {
+           console.error("Duplication d'ID détectée pour le post:", post);
+         } else {
+           ids.add(post.id);
+         }
+       });
+
+       if (result.data && Array.isArray(result.data)) {
+         // Sort the posts here
+         const sortedPosts = result.data.slice(); // Create a copy of the array
+         sortedPosts.sort((a, b) => {
+           // Assuming you have a 'createdAt' field in your post attributes
+           const dateA = new Date(a.attributes.createdAt);
+           const dateB = new Date(b.attributes.createdAt);
+
+           if (sortOrder === "desc") {
+             return dateB - dateA; // Descending order
+           } else {
+             return dateA - dateB; // Ascending order
+           }
+         });
+
+         setPosts(sortedPosts);
+         checkPostAttributes(sortedPosts); // Vérification des attributs après avoir défini les articles
+       } else {
+         console.error("L'API n'a pas renvoyé le format attendu :", result);
+         setError("Format de données inattendu.");
+       }
+
+       setLoading(false);
+     } catch (error) {
+       console.error(
+         "Une erreur s'est produite lors de la récupération des articles :",
+         error
+       );
+       setError("Erreur lors de la récupération des articles.");
+       setLoading(false);
+     }
+   };
   useEffect(() => {
-    const token = localStorage.getItem("jwt");
-    if (token) {
-      setIsUserLoggedIn(true);
-    }
-    const fetchPosts = async () => {
-      try {
-        const response = await fetch(
-          "http://localhost:1337/api/posts?populate=author"
-        );
-        const result = await response.json();
-        console.log(result);
-
-        const ids = new Set();
-        result.data.forEach((post) => {
-          if (!post.id) {
-            console.error("Un post n'a pas d'ID:", post);
-          } else if (ids.has(post.id)) {
-            console.error("Duplication d'ID détectée pour le post:", post);
-          } else {
-            ids.add(post.id);
-          }
-        });
-
-        if (result.data && Array.isArray(result.data)) {
-          // Sort the posts here
-          const sortedPosts = result.data.slice(); // Create a copy of the array
-          sortedPosts.sort((a, b) => {
-            // Assuming you have a 'createdAt' field in your post attributes
-            const dateA = new Date(a.attributes.createdAt);
-            const dateB = new Date(b.attributes.createdAt);
-
-            if (sortOrder === "desc") {
-              return dateB - dateA; // Descending order
-            } else {
-              return dateA - dateB; // Ascending order
-            }
-          });
-
-          setPosts(sortedPosts);
-          checkPostAttributes(sortedPosts); // Vérification des attributs après avoir défini les articles
-        } else {
-          console.error("L'API n'a pas renvoyé le format attendu :", result);
-          setError("Format de données inattendu.");
-        }
-
-        setLoading(false);
-      } catch (error) {
-        console.error(
-          "Une erreur s'est produite lors de la récupération des articles :",
-          error
-        );
-        setError("Erreur lors de la récupération des articles.");
-        setLoading(false);
+      const token = localStorage.getItem("jwt");
+      if (token) {
+        setIsUserLoggedIn(true);
       }
-    };
 
     fetchPosts();
   }, [sortOrder]);
@@ -198,6 +200,7 @@ const PostsPage = () => {
           social media website.
         </h2>
       </section>
+      <CreatePost onRefreshPosts={fetchPosts} />
 
       {isUserLoggedIn ? (
         <>
