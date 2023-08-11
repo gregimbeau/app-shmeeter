@@ -22,7 +22,7 @@ const Profile = () => {
 
       if (token) {
         try {
-          const response = await fetch("http://localhost:1337/api/users/me", {
+          const response = await fetch("https://app-shmeeter-server-production.up.railway.app/api/users/me", {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -58,7 +58,7 @@ const Profile = () => {
     try {
       const token = Cookies.get("token");
       const response = await fetch(
-        `http://localhost:1337/api/users/${userProfile.id}`,
+        `https://app-shmeeter-server-production.up.railway.app/api/users/${userProfile.id}`,
         {
           method: "PUT",
           headers: {

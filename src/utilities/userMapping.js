@@ -2,7 +2,7 @@ let userMapping = null;
 
 export const fetchUserIdByUsername = async (username) => {
   if (!userMapping) {
-    const response = await fetch("http://localhost:1337/api/users");
+    const response = await fetch("https://app-shmeeter-server-production.up.railway.app/api/users");
     if (!response.ok) {
       throw new Error("Failed to fetch users");
     }

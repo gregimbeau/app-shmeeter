@@ -30,7 +30,7 @@ const fetchUserProfile = async () => {
 
   if (token) {
     try {
-      const response = await fetch("http://localhost:1337/api/users/me", {
+      const response = await fetch("https://app-shmeeter-server-production.up.railway.app/api/users/me", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -61,7 +61,7 @@ const fetchUserProfile = async () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:1337/api/auth/local", {
+      const response = await fetch("https://app-shmeeter-server-production.up.railway.app/api/auth/local", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

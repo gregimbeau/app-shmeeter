@@ -12,7 +12,6 @@ The goal of this project is to set up a quasi-Twitter. This app is minimalist an
 ### 2.1. Features
 
 #### 2.1.1. Registration
-- Route: `/register`
 - Data: username, email, password
 
 #### 2.1.2. Login

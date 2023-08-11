@@ -30,7 +30,7 @@ useEffect(() => {
 
     // Fetch user's profile based on ID
     const userResponse = await fetch(
-      `http://localhost:1337/api/users/${userId}`,
+      `https://app-shmeeter-server-production.up.railway.app/api/users/${userId}`,
       { headers }
     );
     const userData = await userResponse.json();
@@ -38,7 +38,7 @@ useEffect(() => {
 
     // Fetch user's posts using the filter
     const postsResponse = await fetch(
-      `http://localhost:1337/api/posts?filters[author][id][$eq]=${userId}`,
+      `https://app-shmeeter-server-production.up.railway.app/api/posts?filters[author][id][$eq]=${userId}`,
       { headers }
     );
     const userPosts = await postsResponse.json();

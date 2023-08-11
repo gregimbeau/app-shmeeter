@@ -26,7 +26,7 @@ const handleSubmit = (e) => {
     role: formData.role,
   };
 
-  fetch("http://localhost:1337/api/users/", {
+  fetch("https://app-shmeeter-server-production.up.railway.app/api/users/", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -42,7 +42,7 @@ const handleSubmit = (e) => {
     .then((result) => {
       console.log(result);
       // Supposons que votre endpoint pour la connexion soit /auth/local
-      return fetch("http://localhost:1337/api/auth/local", {
+      return fetch("https://app-shmeeter-server-production.up.railway.app/api/auth/local", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

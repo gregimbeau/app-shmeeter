@@ -14,7 +14,7 @@ const CreatePost = ({ onPostCreated, onRefreshPosts }) => {
     if (token) {
       try {
         setLoading(true); // start loading
-        const response = await fetch("http://localhost:1337/api/users/me", {
+        const response = await fetch("https://app-shmeeter-server-production.up.railway.app/api/users/me", {
           method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
@@ -31,7 +31,7 @@ const CreatePost = ({ onPostCreated, onRefreshPosts }) => {
         setUserProfile(profile);
         setLoading(false); // end loading
       } catch (error) {
-        console.error("There was an error fetching user profile:", error);
+        // console.error("There was an error fetching user profile:", error);
         setError(error.message || "Failed to fetch user profile"); // set error
         setLoading(false); // end loading
       }
@@ -72,7 +72,7 @@ const CreatePost = ({ onPostCreated, onRefreshPosts }) => {
     };
     console.log(postData);
     try {
-      const response = await fetch("http://localhost:1337/api/posts", {
+      const response = await fetch("https://app-shmeeter-server-production.up.railway.app/api/posts", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

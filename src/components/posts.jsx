@@ -15,7 +15,7 @@ const PostsPage = () => {
 
   const handleDelete = async (id) => {
     try {
-      const response = await fetch(`http://localhost:1337/api/posts/${id}`, {
+      const response = await fetch(`https://app-shmeeter-server-production.up.railway.app/api/posts/${id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -42,7 +42,7 @@ const PostsPage = () => {
     }
 
     try {
-      const response = await fetch(`http://localhost:1337/api/posts/${id}`, {
+      const response = await fetch(`https://app-shmeeter-server-production.up.railway.app/api/posts/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -121,7 +121,7 @@ const PostsPage = () => {
     try {
       
       const response = await fetch(
-        `http://localhost:1337/api/posts?sort=createdAt:${sortOrder}&populate=author`
+        `https://app-shmeeter-server-production.up.railway.app/api/posts?sort=createdAt:${sortOrder}&populate=author`
       );
       const result = await response.json();
       console.log(result);
