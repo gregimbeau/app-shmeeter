@@ -205,81 +205,85 @@ const PostsPage = () => {
     }, obj);
   }
 
-return (
-  <div className='container'>
-    <section>
-      <h1>Welcome on My Social Network.</h1>
-      <h4>
-        This website is a training to React, global state handling, and tokens.
-        Here, authentication and routing will be used to create a small social
-        media website.
-      </h4>
-    </section>
+  return (
+    <div className='container'>
+      <section>
+        <h1>Welcome on My Social Network.</h1>
+        <h4>
+          This website is a training to React, global state handling, and
+          tokens. Here, authentication and routing will be used to create a
+          small social media website.
+        </h4>
+      </section>
 
-    <CreatePost onRefreshPosts={fetchPosts} />
+      <CreatePost onRefreshPosts={fetchPosts} />
 
-    {isUserLoggedIn ? (
-      <>
-        <div className='button-group'>
-          <button
-            className='btn btn--primary'
-            onClick={() => setSortOrder("desc")}>
-            Tri par plus récents
-          </button>
-          <button
-            className='btn btn--secondary'
-            onClick={() => setSortOrder("asc")}>
-            Tri par plus anciens
-          </button>
-        </div>
+      {isUserLoggedIn ? (
+        <>
+          <div className='button-group'>
+            <button
+              className='btn btn--primary'
+              onClick={() => setSortOrder("desc")}>
+              Tri par plus récents
+            </button>
+            <button
+              className='btn btn--secondary'
+              onClick={() => setSortOrder("asc")}>
+              Tri par plus anciens
+            </button>
+          </div>
 
-        <ul className='post-list'>
-          {posts.map((post) => (
-            <li key={post.id} className='post'>
-              {/* Assuming you might have an avatar image for the post author */}
-              {/* <img src={postAuthorAvatar} alt="Author's avatar" className="avatar" /> */}
+          <ul className='post-list'>
+            {posts.map((post) => (
+              <li key={post.id} className='post'>
+                {/* Assuming you might have an avatar image for the post author */}
+                {/* <img src={postAuthorAvatar} alt="Author's avatar" className="avatar" /> */}
 
-              <div className='post-content'>
-                <h2 className='post-title'>
-                  {post.attributes.author.data.attributes.username ? (
-                    <Link
-                      to={`/user/${post.attributes.author.data.attributes.username}`}>
-                      {getDisplayName(post)}
-                    </Link>
-                  ) : (
-                    "Nom d'utilisateur non disponible"
-                  )}
-                </h2>
-                <p className='post-text'>
-                  {post.attributes?.text || "Sans titre"}
-                </p>
-                <Likes
-                  className='likes'
-                  likesCount={post.attributes?.like}
-                  onLike={() => handleLike(post.id)}
-                  onDislike={() => handleDislike(post.id)}
-                  likedStatus={userLikes[post.id]}
-                />
+                <div className='post-content'>
+                  <h2 className='post-title'>
+                    {safelyAccess(
+                      post,
+                      "attributes.author.data.attributes.username"
+                    ) &&
+                    Number(safelyAccess(post, "attributes.author.data.id")) !==
+                      currentUserId ? (
+                      <Link
+                        to={`/user/${post.attributes.author.data.attributes.username}`}>
+                        {getDisplayName(post)}
+                      </Link>
+                    ) : (
+                      getDisplayName(post)
+                    )}
+                  </h2>
+                  <p className='post-text'>
+                    {post.attributes?.text || "Sans titre"}
+                  </p>
+                  <Likes
+                    className='likes'
+                    likesCount={post.attributes?.like}
+                    onLike={() => handleLike(post.id)}
+                    onDislike={() => handleDislike(post.id)}
+                    likedStatus={userLikes[post.id]}
+                  />
 
-                {Number(post.attributes?.author?.data?.id) === currentUserId ? (
-                  <button
-                    className='btn btn--delete'
-                    onClick={() => handleDelete(post.id)}>
-                    Supprimer
-                  </button>
-                ) : null}
-              </div>
-            </li>
-          ))}
-        </ul>
-      </>
-    ) : (
-      <p className='login-reminder'>Please log in to view posts.</p>
-    )}
-  </div>
-);
-
-
+                  {Number(post.attributes?.author?.data?.id) ===
+                  currentUserId ? (
+                    <button
+                      className='btn btn--delete'
+                      onClick={() => handleDelete(post.id)}>
+                      Supprimer
+                    </button>
+                  ) : null}
+                </div>
+              </li>
+            ))}
+          </ul>
+        </>
+      ) : (
+        <p className='login-reminder'>Please log in to view posts.</p>
+      )}
+    </div>
+  );
 };
 
 export default PostsPage;
