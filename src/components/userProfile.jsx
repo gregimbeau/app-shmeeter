@@ -65,8 +65,7 @@ const UserProfile = () => {
 
               <table>
                 <thead>
-                  <tr>
-                  </tr>
+                  <tr></tr>
                 </thead>
                 <tbody>
                   <tr>
