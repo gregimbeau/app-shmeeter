@@ -124,7 +124,7 @@ const Profile = () => {
 
              <form onSubmit={handleProfileUpdate}>
                <div className='form-group'>
-                 <label>displayName:</label>
+                 <label>Displayed Name:</label>
                  <input
                    type='text'
                    name='displayName'
@@ -135,7 +135,7 @@ const Profile = () => {
                </div>
 
                <div className='form-group'>
-                 <label>description:</label>
+                 <label>Description:</label>
                  <textarea
                    name='description'
                    rows='5'

@@ -3,8 +3,10 @@ import React, { useState } from "react";
 const InscriptionForm = () => {
   const [formData, setFormData] = useState({
     username: "",
+    displayName: "",
     email: "",
     password: "",
+    description: "",
     role: 1,
   });
 
@@ -21,8 +23,10 @@ const handleSubmit = (e) => {
 
   const data = {
     username: formData.username,
+    displayName: formData.displayName,
     email: formData.email,
     password: formData.password,
+    description: formData.description,
     role: formData.role,
   };
 
@@ -60,7 +64,7 @@ const handleSubmit = (e) => {
       console.log(token);
     })
     .catch((error) => {
-      console.error("Erreur lors de la connexion:", error);
+      console.error("Error on conection:", error);
     });
 };
 
@@ -82,7 +86,7 @@ return (
         />
       </div>
       <div className='form-group'>
-        <label>Display Name: (can be changed, public name)</label>
+        <label>Displayed Name: (can be changed, public name)</label>
         <input
           type='text'
           name='displayName'
@@ -111,9 +115,19 @@ return (
           required
         />
       </div>
+      <div className='form-group'>
+        <label>Description</label>
+        <textarea
+          name='description'
+          rows='5'
+          value={formData.description}
+          onChange={handleChange}
+          required
+        />
+      </div>
       <input type='hidden' name='role' value={formData.role} />
       <button className='btn btn--primary' type='submit'>
-        S'inscrire
+        Sign up
       </button>
     </form>
   </div>

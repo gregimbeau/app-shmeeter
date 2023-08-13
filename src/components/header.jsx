@@ -21,7 +21,7 @@ const Header = () => {
           </button>
           {!jwt && (
             <button className='nav-item' onClick={() => navigate("/form")}>
-              S'inscrire
+              Sign up
             </button>
           )}
           {!jwt ? (
