@@ -72,11 +72,21 @@ return (
       {" "}
       {/* A half-width form */}
       <div className='form-group'>
-        <label>Username:</label>
+        <label>Username: (can't be changed, not public)</label>
         <input
           type='text'
           name='username'
           value={formData.username}
+          onChange={handleChange}
+          required
+        />
+      </div>
+      <div className='form-group'>
+        <label>Display Name: (can be changed, public name)</label>
+        <input
+          type='text'
+          name='displayName'
+          value={formData.displayName}
           onChange={handleChange}
           required
         />
