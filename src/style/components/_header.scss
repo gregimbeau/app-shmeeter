@@ -1,6 +1,6 @@
 .header {
   display: flex;
-  align-items: center; // Changed from 'left' to 'center' for vertical alignment
+  align-items: center;
   justify-content: center;
   background-color: $bg-primary;
   border-bottom: 1px solid $text-secondary;
@@ -9,29 +9,28 @@
   top: 0;
   z-index: 10;
   height: 70px;
-  width: 100%;
-  max-width: 100vw;
+  width: 100;
   box-sizing: border-box;
 
   .container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%; // Ensure full width
+    width: 100%;
   }
 
   .logo {
-  width: 40px;
-  height: 40px;
-  background-color: blue;
-  border-radius: 50%; /* Makes it a circle */
-  display: inline-block; /* To make it inline with other nav items */
-  margin-right: 10px; /* A little spacing */
-}
+    width: 40px;
+    height: 40px;
+    background-color: blue;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 10px;
+  }
 
   .nav {
     display: flex;
-    align-items: center; // Changed from 'left' to 'center'
+    align-items: center;
 
     .nav-item {
       margin-right: 20px;
@@ -59,27 +58,32 @@
     }
   }
 
-  @media (max-width: #{$tablet}) {
-    height: 80px; // Reduced header height for tablets
+  @media (max-width: $tablet) {
+    height: 80px;
 
     .nav .nav-item {
-      margin-right: 15px; // Reduced margin for tablet
-      padding: 8px 12px; // Reduced padding for tablet
+      margin-right: 15px;
+      padding: 8px 12px;
     }
   }
 
-  @media (max-width: #{$mobile}) {
-    height: 80px; // Reduced header height for mobiles
+  @media (max-width: $mobile) {
+    height: 80px;
+    width: 400px;
 
     .nav .nav-item {
-      margin-right: 15px; // Reduced margin for tablet
-      padding: 8px 12px; // Reduced padding for tablet
-
+      margin-right: 15px;
+      padding: 8px 12px;
     }
 
-    // Assuming you'd have a hamburger icon with class '.hamburger'
     .hamburger {
       display: block;
+    }
+
+    // Override potential limiting styles
+    .container {
+      max-width: none;
+      padding: 0 20px; // Adjust padding to your design
     }
   }
 }

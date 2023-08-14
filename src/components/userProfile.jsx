@@ -59,8 +59,14 @@ const UserProfile = () => {
           {user && (
             <div className='user-content'>
               <div className='user-header'>
-                {/* Assuming you might want to display user avatar in the future */}
-                {/* <img src={user.avatarUrl} alt="User Avatar" className="avatar" /> */}
+                <img
+                  src={
+                    user.avatarUrl ||
+                    "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=identicon&f=y"
+                  }
+                  alt="User's Avatar"
+                  className='avatar'
+                />{" "}
                 <h1>{user.displayName || user.username}</h1>
               </div>
 

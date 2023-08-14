@@ -8,17 +8,42 @@
     border-bottom: none;
   }
 
-  img.avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    margin-right: 10px;
-  }
 
-  .post-content {
-    flex-grow: 1;
-    margin-left: 10px;
-  }
+
+.post-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* left-aligns the content */
+}
+
+.post-header {
+  display: flex;
+  align-items: center; /* vertical alignment */
+  gap: 10px; /* space between avatar, name, and likes */
+}
+
+.avatar {
+  width: 30px; /* reduced size for a more compact layout */
+  height: 30px;
+  border-radius: 50%; /* makes the avatar circular */
+  object-fit: cover;
+}
+
+.post-title {
+  margin: 0; /* removes any default margin */
+}
+
+.likes {
+  margin: 0; /* removes any default margin */
+}
+
+.post-text {
+  margin-top: 5px; /* adjust as needed */
+}
+
+
+
+
 
   // Tablet adjustments
   @media (max-width: #{$tablet}) {

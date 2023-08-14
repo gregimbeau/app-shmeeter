@@ -16,6 +16,12 @@ $bg-tertiary: #E1E8ED;  // Added this shade, you can adjust as required
 $text-primary: #333;
 $text-secondary: #657786;
 
+$link-color: #007BFF;          // Primary link color
+$link-hover-color: darken($link-color, 10%);  // Darkened link color for hover
+$link-active-color: darken($link-color, 20%); // Darkened link color for active state
+
+
+
 // Other colors can be added as per requirement
 $mobile: 480px;    // Represents screens up to 480px, typically smaller phones
 $tablet: 768px;   // Represents screens up to 768px, such as iPads and tablets

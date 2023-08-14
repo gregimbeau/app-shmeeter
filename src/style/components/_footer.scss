@@ -7,7 +7,7 @@
   left: 0;
   bottom: 0;
   width: 100%;
-  overflow-x: auto; // Enable horizontal scrolling if content overflows
+  overflow-x: auto; 
 
   .container {
     display: flex;
@@ -23,14 +23,15 @@
     color: $text-secondary;
     margin: 0;
     font-weight: 500;
+        @media (max-width: $tablet) {
+      display: none;
+    }
   }
 
   .footer-nav {
     display: flex;
     align-items: center;
-    flex-wrap: nowrap; // Prevent navigation links from wrapping
-
-    // Targeting the anchor links directly
+    flex-wrap: nowrap; 
     a,
     Link {
       font-size: 14px;
@@ -50,11 +51,15 @@
       &:last-child {
         margin-right: 0;
       }
-    }
 
-    @media (max-width: $tablet) {
-      // Adjust the max-width to match your design
-      max-width: 300px;
+      @media (max-width: $tablet) {
+        max-width: 50px;  
+        display: inline-block; 
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-right: 1px;
+      }
     }
   }
 }

@@ -20,9 +20,38 @@
   border-radius: 5px;
   padding: 20px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  z-index: 999;
+  z-index: 101; // Increased to be above the background
   max-height: 100vh;
   overflow-y: auto;
+
+  @media (max-width: 1024px) { // Tablet
+    width: 80%;
+    padding: 15px;
+  }
+
+  @media (max-width: 768px) { // Mobile
+    width: 100%;
+    max-width: none;
+    border-radius: 0;
+    padding: 15px;
+
+    .modal-content {
+      max-height: 80vh;
+    }
+
+    .modal-header button {
+      font-size: 20px;
+    }
+
+    .modal-content form label {
+      width: 90%;
+      & > input[type="text"],
+      & > input[type="email"],
+      & > select {
+        font-size: 0.8rem;
+      }
+    }
+  }
 
   .modal-header {
     display: flex;
@@ -34,7 +63,6 @@
       border: none;
       font-size: 24px;
       cursor: pointer;
-
       &:hover {
         color: #888;
       }
@@ -45,37 +73,33 @@
     margin-top: 20px;
     max-height: 70vh;
     overflow-y: auto;
-    
-    // Style for form elements
+
     form {
       display: flex;
       flex-direction: column;
-      align-items: center; // This will center the fields
-
+      align-items: center;
       label {
         margin-bottom: 15px;
         font-size: 0.9rem;
-        width: 70%; // Set the width to 70% of the modal
+        width: 70%;
 
         & > input[type="text"],
         & > input[type="email"],
         & > select {
-          width: 100%; // This will now be 100% of the label's width, which is 70% of the modal
+          width: 100%;
           padding: 10px;
           border: 1px solid #ccc;
           border-radius: 4px;
           font-size: 0.9rem;
         }
 
-        // Styling radio and checkbox groups
         &.checkbox-group, &.radio-group {
           display: flex;
           justify-content: start;
           align-items: center;
           gap: 10px;
 
-          input[type="checkbox"],
-          input[type="radio"] {
+          input[type="checkbox"], input[type="radio"] {
             margin-right: 5px;
           }
         }
@@ -97,15 +121,13 @@
       }
     }
   }
-}
 
-// Styles for hiding scrollbar
-.modal-content {
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+  // Styles for hiding scrollbar
+  &::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
 
-    &::-webkit-scrollbar {
-        width: 0;
-        height: 0;
-    }
+  scrollbar-width: none; // Firefox
+  -ms-overflow-style: none; // IE and Edge
 }

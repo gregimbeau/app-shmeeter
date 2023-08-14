@@ -1,0 +1,41 @@
+a {
+  color: $link-color;                 // Default link color
+  text-decoration: none;              // Remove underline
+  transition: color 0.3s ease;        // Smooth transition for color changes
+
+  &:hover,
+  &:focus {
+    color: $link-hover-color;         // Change color when link is hovered or focused
+    text-decoration: underline;       // Add underline to indicate interactivity
+  }
+
+  &:active {
+    color: $link-active-color;        // Darken color when link is active (clicked)
+  }
+
+  // For better accessibility
+  &:focus {
+    outline: 2px solid $link-hover-color;  // Add a noticeable outline for keyboard navigation
+  }
+
+  &[aria-disabled="true"] {           // If you want to indicate a disabled link
+    cursor: not-allowed;               // Change cursor
+    opacity: 0.5;                      // Reduce opacity to indicate it's disabled
+  }
+}
+
+// If you use buttons styled as links
+.button-link {
+  @extend a;  // Extend styles from the "a" selector
+
+  // Button specific styles
+  padding: 8px 12px;
+  border: none;
+  border-radius: 4px;
+  background-color: transparent;
+  cursor: pointer;
+
+  &:hover {
+    background-color: rgba($link-hover-color, 0.1); // Add a background color on hover
+  }
+}

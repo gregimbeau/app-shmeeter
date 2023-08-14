@@ -202,7 +202,7 @@ const PostsPage = () => {
 
   function getDisplayName(post) {
     const displayName =
-      post?.attributes.author.data.attributes.displayName || "Sans nom";
+      post?.attributes?.author?.data?.attributes?.displayName || "No name";
     return displayName;
   }
 
@@ -244,35 +244,51 @@ const PostsPage = () => {
           <ul className='post-list'>
             {posts.map((post) => (
               <li key={post.id} className='post'>
-                {/* Assuming you might have an avatar image for the post author */}
-                {/* <img src={postAuthorAvatar} alt="Author's avatar" className="avatar" /> */}
-
                 <div className='post-content'>
-                  <h2 className='post-title'>
-                    {safelyAccess(
-                      post,
-                      "attributes.author.data.attributes.username"
-                    ) &&
-                    Number(safelyAccess(post, "attributes.author.data.id")) !==
-                      currentUserId ? (
-                      <Link
-                        to={`/user/${post.attributes.author.data.attributes.username}`}>
-                        {getDisplayName(post)}
-                      </Link>
-                    ) : (
-                      getDisplayName(post)
-                    )}
-                  </h2>
+                  <div className='post-header'>
+                    {/* Display avatar */}
+                    <img
+                      src={safelyAccess(
+                        post,
+                        "attributes.author.data.attributes.avatarUrl"
+                      )}
+                      alt="Author's avatar"
+                      className='avatar'
+                      onError={(e) => {
+                        e.target.onerror = null; // Prevents endless loop in case the fallback image also fails
+                        e.target.src =
+                          "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=identicon&f=y";
+                      }}
+                    />
+
+                    <h2 className='post-title'>
+                      {safelyAccess(
+                        post,
+                        "attributes.author.data.attributes.username"
+                      ) &&
+                      Number(
+                        safelyAccess(post, "attributes.author.data.id")
+                      ) !== currentUserId ? (
+                        <Link
+                          to={`/user/${post.attributes.author.data.attributes.username}`}>
+                          {getDisplayName(post)}
+                        </Link>
+                      ) : (
+                        getDisplayName(post)
+                      )}
+                    </h2>
+                    <Likes
+                      className='likes'
+                      likesCount={post.attributes?.like}
+                      onLike={() => handleLike(post.id)}
+                      onDislike={() => handleDislike(post.id)}
+                      likedStatus={userLikes[post.id]}
+                    />
+                  </div>
+
                   <p className='post-text'>
                     {post.attributes?.text || "Sans titre"}
                   </p>
-                  <Likes
-                    className='likes'
-                    likesCount={post.attributes?.like}
-                    onLike={() => handleLike(post.id)}
-                    onDislike={() => handleDislike(post.id)}
-                    likedStatus={userLikes[post.id]}
-                  />
 
                   {Number(post.attributes?.author?.data?.id) ===
                   currentUserId ? (

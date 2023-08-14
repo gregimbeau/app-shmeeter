@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import { useAtom } from "jotai";
 import { jwtAtom } from "../state";
-import Logo from "../assets/logo.svg"; 
+import Logo from "../assets/logo.png"; 
 
 const Header = () => {
   const navigate = useNavigate();
