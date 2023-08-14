@@ -1,7 +1,10 @@
-// views/_profile.scss
+$mobile: 480px;
+$tablet: 768px;
+$desktop: 1024px;
 
 .profile-container {
     padding: 20px;
+    
 
     .profile-header {
         display: flex;
@@ -17,5 +20,36 @@
 
     .profile-content {
         margin-top: 20px;
+        
+    }
+
+    @media (max-width: #{$mobile}) {
+        padding: 10px;
+
+        .profile-header {
+            flex-direction: column;
+
+            img.avatar {
+                width: 50px;
+                height: 50px;
+            }
+        }
+    }
+
+    @media (min-width: #{$mobile + 1}) and (max-width: #{$tablet}) {
+        padding: 15px;
+
+        .profile-header {
+            flex-direction: row;
+
+            img.avatar {
+                width: 55px;
+                height: 55px;
+            }
+        }
+    }
+
+    @media (min-width: #{$tablet + 1}) and (max-width: #{$desktop}) {
+        padding: 20px;
     }
 }

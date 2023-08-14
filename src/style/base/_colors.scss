@@ -17,3 +17,31 @@ $text-primary: #333;
 $text-secondary: #657786;
 
 // Other colors can be added as per requirement
+$mobile: 480px;    // Represents screens up to 480px, typically smaller phones
+$tablet: 768px;   // Represents screens up to 768px, such as iPads and tablets
+$desktop: 1024px; // Represents screens above 1024px, for desktops and larger tablets in landscape mode
+$footer-height: 60px;
+
+@media (max-width: #{$tablet}) {
+    $footer-height-tablet: 50px; // Adjust based on your footer's height on tablets.
+    
+    body {
+        padding-bottom: $footer-height-tablet;
+    }
+
+    .footer {
+        height: $footer-height-tablet;
+    }
+}
+
+@media (max-width: #{$mobile}) {
+    $footer-height-mobile: 40px; // Adjust based on your footer's height on mobile.
+    
+    body {
+        padding-bottom: $footer-height-mobile;
+    }
+
+    .footer {
+        height: $footer-height-mobile;
+    }
+}

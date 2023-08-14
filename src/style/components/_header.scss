@@ -1,8 +1,6 @@
-// components/_header.scss
-
 .header {
   display: flex;
-  align-items: left;
+  align-items: center; // Changed from 'left' to 'center' for vertical alignment
   justify-content: center;
   background-color: $bg-primary;
   border-bottom: 1px solid $text-secondary;
@@ -11,15 +9,20 @@
   top: 0;
   z-index: 10;
   height: 70px;
+  width: 100%;
+  max-width: 100vw;
+  box-sizing: border-box;
+
   .container {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width: 100%; // Ensure full width
   }
 
   .nav {
     display: flex;
-    align-items: left;
+    align-items: center; // Changed from 'left' to 'center'
 
     .nav-item {
       margin-right: 20px;
@@ -44,6 +47,30 @@
       color: $primary;
       font-size: 16px;
       outline: none;
+    }
+  }
+
+  @media (max-width: #{$tablet}) {
+    height: 80px; // Reduced header height for tablets
+
+    .nav .nav-item {
+      margin-right: 15px; // Reduced margin for tablet
+      padding: 8px 12px; // Reduced padding for tablet
+    }
+  }
+
+  @media (max-width: #{$mobile}) {
+    height: 80px; // Reduced header height for mobiles
+
+    .nav .nav-item {
+      margin-right: 15px; // Reduced margin for tablet
+      padding: 8px 12px; // Reduced padding for tablet
+
+    }
+
+    // Assuming you'd have a hamburger icon with class '.hamburger'
+    .hamburger {
+      display: block;
     }
   }
 }

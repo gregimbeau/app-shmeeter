@@ -19,3 +19,13 @@
 // Utilities
 @import "./utilities/visibility";
 
+// *,
+// *::before,
+// *::after {
+//   box-sizing: border-box;
+// }
+
+
+body {
+    padding-bottom: $footer-height;
+}

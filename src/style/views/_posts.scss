@@ -1,7 +1,5 @@
-// views/_posts.scss
-
 .post {
-  padding: 10px;
+  padding: 20px;
   border-bottom: 1px solid $text-secondary;
   display: flex;
   justify-content: space-between;
@@ -20,5 +18,33 @@
   .post-content {
     flex-grow: 1;
     margin-left: 10px;
+  }
+
+  // Tablet adjustments
+  @media (max-width: #{$tablet}) {
+    padding: 15px;
+
+    img.avatar {
+      width: 35px;
+      height: 35px;
+      margin-right: 8px;
+    }
+  }
+
+  // Mobile adjustments
+  @media (max-width: #{$mobile}) {
+    flex-direction: column; // Stack vertically on mobile
+    padding: 10px;
+
+    img.avatar {
+      width: 30px;
+      height: 30px;
+      margin-right: 0;
+      margin-bottom: 10px;
+    }
+
+    .post-content {
+      margin-left: 0;
+    }
   }
 }
