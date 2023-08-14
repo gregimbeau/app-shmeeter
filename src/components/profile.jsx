@@ -140,6 +140,7 @@ const Profile = () => {
                   "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=identicon&f=y"
                 }
                 alt='User Avatar'
+                className='avatar'
               />
             )}
 

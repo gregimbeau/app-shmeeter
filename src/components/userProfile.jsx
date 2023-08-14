@@ -68,6 +68,7 @@ const UserProfile = () => {
                   }
                   alt="User's Avatar"
                   className='avatar'
+                  // style={{ width: "25px", height: "20px" }}
                 />{" "}
                 <h1>{user.displayName || user.username}</h1>
               </div>

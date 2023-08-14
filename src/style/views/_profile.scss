@@ -5,17 +5,17 @@ $desktop: 1024px;
 .profile-container {
     padding: 20px;
     
-
+        img.avatar {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+        }
     .profile-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
 
-        img.avatar {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-        }
+
     }
 
     .profile-content {
