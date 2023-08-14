@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import Bravo from "@/components/bravo";
 import { useAtom } from "jotai";
-import { modalVisibleAtom, formDataAtom } from "../state"; // Adjust the path as necessary
+import { modalVisibleAtom, formDataAtom } from "../state";
+import { API_BASE_URL } from "../config"; 
 
 const InscriptionForm = () => {
   const [isModalVisible, setIsModalVisible] = useAtom(modalVisibleAtom);
@@ -27,7 +28,7 @@ const InscriptionForm = () => {
       role: formData.role,
     };
 
-    fetch("https://app-shmeeter-server-production.up.railway.app/api/users/", {
+    fetch(`${API_BASE_URL}/api/users/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -44,7 +45,7 @@ const InscriptionForm = () => {
         console.log(result);
         // Supposons que votre endpoint pour la connexion soit /auth/local
         return fetch(
-          "https://app-shmeeter-server-production.up.railway.app/api/auth/local",
+          `${API_BASE_URL}/api/auth/local`,
           {
             method: "POST",
             headers: {

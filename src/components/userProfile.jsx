@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import { fetchUserIdByUsername } from "../utilities/userMapping";
 import { useAtom } from "jotai";
 import { userAtom, postsAtom } from "../state";
+import { API_BASE_URL } from "../config"; 
+
 
 const UserProfile = () => {
   const { username } = useParams();
@@ -32,14 +34,14 @@ const UserProfile = () => {
       };
 
       const userResponse = await fetch(
-        `https://app-shmeeter-server-production.up.railway.app/api/users/${userId}`,
+        ` ${API_BASE_URL}/api/users/${userId}`,
         { headers }
       );
       const userData = await userResponse.json();
       setUser(userData);
 
       const postsResponse = await fetch(
-        `https://app-shmeeter-server-production.up.railway.app/api/posts?filters[author][id][$eq]=${userId}`,
+        ` ${API_BASE_URL}/api/posts?filters[author][id][$eq]=${userId}`,
         { headers }
       );
       const userPosts = await postsResponse.json();

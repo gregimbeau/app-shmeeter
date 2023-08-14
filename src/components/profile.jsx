@@ -5,6 +5,8 @@ import { Cloudinary } from "@cloudinary/url-gen";
 import { fill } from "@cloudinary/url-gen/actions/resize";
 import { useAtom } from "jotai";
 import { userProfileAtom, formDataAtom } from "../state";
+import { API_BASE_URL } from "../config"; 
+
 
 const Profile = () => {
   // Accessing state:
@@ -53,7 +55,7 @@ const Profile = () => {
       if (token) {
         try {
           const response = await fetch(
-            "https://app-shmeeter-server-production.up.railway.app/api/users/me",
+            ` ${API_BASE_URL}/api/users/me`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -96,7 +98,7 @@ const Profile = () => {
       console.log("Sending data:", updatedData); // <-- Add this log for sent data
 
       const response = await fetch(
-        `https://app-shmeeter-server-production.up.railway.app/api/users/${userProfile.id}`,
+        ` ${API_BASE_URL}/api/users/${userProfile.id}`,
         {
           method: "PUT",
           headers: {

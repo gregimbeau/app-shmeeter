@@ -10,8 +10,10 @@ import {
   sortOrderAtom,
   isUserLoggedInAtom,
   userLikesAtom,
+  loginStateAtom,
 } from "../state";
 import Likes from "./likes.jsx";
+import { API_BASE_URL } from "../config";
 
 const PostsPage = () => {
   const [posts, setPosts] = useAtom(postsAtom);
@@ -20,18 +22,39 @@ const PostsPage = () => {
   const [sortOrder, setSortOrder] = useAtom(sortOrderAtom);
   const [isUserLoggedIn, setIsUserLoggedIn] = useAtom(isUserLoggedInAtom);
   const [userLikes, setUserLikes] = useAtom(userLikesAtom);
-
-  const handleDelete = async (id) => {
+  const [loginState, setLoginState] = useAtom(loginStateAtom);
+  const reloadPostsList = async () => {
     try {
       const response = await fetch(
-        `https://app-shmeeter-server-production.up.railway.app/api/posts/${id}`,
+        `${API_BASE_URL}/api/posts/?populate=*`,
         {
-          method: "DELETE",
+          method: "get",
           headers: {
+            Authorization: `Bearer ${loginState.token}`,
             "Content-Type": "application/json",
           },
         }
       );
+      if (response.ok) {
+        const jsonData = await response.json();
+        const reversedData = jsonData.data.reverse();
+        setPosts(reversedData);
+      } else {
+        throw new Error("Erreur lors de la requête");
+      }
+    } catch (error) {
+      console.error("Erreur de requête : ", error);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/posts/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
       if (!response.ok) {
         throw new Error(`Failed to delete post. Status: ${response.status}`);
@@ -45,81 +68,68 @@ const PostsPage = () => {
     }
   };
 
-  const updatePost = async (id, updatedFields) => {
-    const post = posts.find((p) => p.id === id);
-    if (!post) {
-      console.error("Post not found with ID:", id);
-      return;
-    }
-
+  const handleLike = async (postId, likesCount) => {
     try {
+      if (!loginState || !loginState.token) {
+        throw new Error("User is not logged in");
+      }
+
       const response = await fetch(
-        `https://app-shmeeter-server-production.up.railway.app/api/posts/${id}`,
+        `${API_BASE_URL}/api/posts/${postId}?populate=*`,
         {
-          method: "PUT",
+          method: "GET",
           headers: {
+            Authorization: `Bearer ${loginState.token}`,
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ data: updatedFields }),
         }
       );
 
       if (!response.ok) {
-        console.error("Error body:", await response.text());
-        throw new Error(`Failed to update post. Status: ${response.status}`);
+        throw new Error("Erreur lors de la récupération des détails du post");
       }
 
-      return await response.json();
-    } catch (error) {
-      console.error("Error updating post:", error);
-      throw error;
-    }
-  };
-
-  const handleLikeOrDislike = async (id, isLike = true) => {
-    const post = posts.find((p) => p.id === id);
-
-    const updatedLikeCount = isLike
-      ? post.attributes.like + 1
-      : Math.max(post.attributes.like - 1, 0); // Ensure likes can't go negative
-
-    const optimisticPosts = posts.map((post) =>
-      post.id === id
-        ? {
-            ...post,
-            attributes: { ...post.attributes, like: updatedLikeCount },
-          }
-        : post
-    );
-    setPosts(optimisticPosts);
-
-    try {
-      const updatedPost = await updatePost(id, { like: updatedLikeCount });
-
-      if (!updatedPost) {
-        throw new Error("Failed to update post");
-      }
-    } catch (error) {
-      console.error("Error handling like/dislike:", error);
-      const revertedPosts = posts.map((post) =>
-        post.id === id
-          ? {
-              ...post,
-              attributes: { ...post.attributes, like: post.attributes.like },
-            }
-          : post
+      const postData = await response.json();
+      const currentUsersLikes = postData.data.attributes.users_likes.data.map(
+        (user) => user.id.toString()
       );
-      setPosts(revertedPosts);
-      alert("Erreur lors de la mise à jour. Veuillez réessayer.");
-    }
-    setUserLikes((prev) => ({
-      ...prev,
-      [id]: isLike ? "liked" : "disliked",
-    }));
-  };
+      const userHasLiked = currentUsersLikes.some(
+        (userId) => userId === loginState.userId.toString()
+      );
+      const newUsersLikes = userHasLiked
+        ? currentUsersLikes.filter(
+            (userId) => userId !== loginState.userId.toString()
+          ) // Dislike
+        : [...currentUsersLikes, loginState.userId.toString()]; // Like
 
-  const handleLike = (id) => handleLikeOrDislike(id, true);
-  const handleDislike = (id) => handleLikeOrDislike(id, false);
+      const likeData = {
+        data: {
+          like: userHasLiked ? likesCount - 1 : likesCount + 1,
+          users_likes: newUsersLikes,
+        },
+      };
+
+      const updateResponse = await fetch(
+        `${API_BASE_URL}/api/posts/${postId}`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${loginState.token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(likeData),
+        }
+      );
+
+      if (updateResponse.ok) {
+        reloadPostsList(); // Make sure you're using the right function here
+      } else {
+        throw new Error("Erreur lors de la mise à jour du like");
+      }
+    } catch (error) {
+      console.error("Erreur lors de la requête: ", error);
+    }
+  };
 
   const checkPostAttributes = (posts) => {
     posts.forEach((post) => {
@@ -134,7 +144,7 @@ const PostsPage = () => {
   const fetchPosts = async () => {
     try {
       const response = await fetch(
-        `https://app-shmeeter-server-production.up.railway.app/api/posts?sort=createdAt:${sortOrder}&populate=author`
+        `${API_BASE_URL}/api/posts?sort=createdAt:${sortOrder}&populate=author`
       );
       const result = await response.json();
       console.log(result);
@@ -232,13 +242,11 @@ const PostsPage = () => {
             <button
               className='btn btn--primary'
               onClick={() => setSortOrder("desc")}>
-              Tri par plus récents
-            </button>
+Most recents first            </button>
             <button
               className='btn btn--secondary'
               onClick={() => setSortOrder("asc")}>
-              Tri par plus anciens
-            </button>
+most ancient first            </button>
           </div>
 
           <ul className='post-list'>
@@ -280,8 +288,7 @@ const PostsPage = () => {
                     <Likes
                       className='likes'
                       likesCount={post.attributes?.like}
-                      onLike={() => handleLike(post.id)}
-                      onDislike={() => handleDislike(post.id)}
+                      onLike={() => handleLike(post.id, post.attributes?.like)}
                       likedStatus={userLikes[post.id]}
                     />
                   </div>

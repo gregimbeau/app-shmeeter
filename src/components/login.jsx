@@ -3,6 +3,8 @@ import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import { useAtom } from "jotai";
 import { loginDataAtom, errorMsgAtom } from "../state";
+import { API_BASE_URL } from "../config"; 
+
 
 const LoginForm = () => {
   const [loginData, setLoginData] = useAtom(loginDataAtom);
@@ -30,7 +32,7 @@ const LoginForm = () => {
     if (token) {
       try {
         const response = await fetch(
-          "https://app-shmeeter-server-production.up.railway.app/api/users/me",
+          `${API_BASE_URL}/api/users/me`,
           {
             method: "GET",
             headers: {
@@ -63,7 +65,7 @@ const LoginForm = () => {
     e.preventDefault();
     try {
       const response = await fetch(
-        "https://app-shmeeter-server-production.up.railway.app/api/auth/local",
+        `${API_BASE_URL}/api/auth/local`,
         {
           method: "POST",
           headers: {

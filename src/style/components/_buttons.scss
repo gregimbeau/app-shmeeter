@@ -2,31 +2,38 @@
 
 .button,
 .btn {
-    display: inline-block;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 4px;
-    font-size: 16px;
-    text-align: center;
-    cursor: pointer;
-    transition: background-color 0.3s;
+  display: inline-block;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s;
 
-    &--primary {
-        background-color: $primary;
-        color: white;
+  &--primary {
+    background-color: $primary;
+    color: white;
 
-        &:hover {
-            background-color: darken($primary, 10%);
-        }
+    &:hover {
+      background-color: darken($primary, 10%);
     }
+  }
 
-    &--secondary {
-        background-color: $secondary;
-        color: white;
+  &--secondary {
+    background-color: $secondary;
+    color: white;
 
-        &:hover {
-            background-color: darken($secondary, 10%);
-        }
+    &:hover {
+      background-color: darken($secondary, 15%);
     }
+  }
 }
 
+.nolikes {
+  cursor: pointer;
+}
+.liked {
+  box-shadow: 0 0 4px 1px rgb(26, 165, 219);
+  cursor: pointer;
+}

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
+import { API_BASE_URL } from "../config"; 
 
 
 const CreatePost = ({ onPostCreated, onRefreshPosts }) => {
@@ -16,7 +17,7 @@ const CreatePost = ({ onPostCreated, onRefreshPosts }) => {
       try {
         setLoading(true); // start loading
         const response = await fetch(
-          "https://app-shmeeter-server-production.up.railway.app/api/users/me",
+          `${API_BASE_URL}/api/users/me`,
           {
             method: "GET",
             headers: {
@@ -77,7 +78,7 @@ const CreatePost = ({ onPostCreated, onRefreshPosts }) => {
     console.log(postData);
     try {
       const response = await fetch(
-        "https://app-shmeeter-server-production.up.railway.app/api/posts",
+        `${API_BASE_URL}/api/posts`,
         {
           method: "POST",
           headers: {
