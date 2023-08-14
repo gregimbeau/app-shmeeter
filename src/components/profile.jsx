@@ -31,28 +31,28 @@ const Profile = () => {
 
   const transformedAvatar = avatarUrl
     ? cld
-        .image(avatarUrl.split("/").pop().split(".")[0])
-        .resize(fill().width(250).height(250))
+      .image(avatarUrl.split("/").pop().split(".")[0])
+      .resize(fill().width(250).height(250))
     : null;
 
-const uploadWidget = () => {
-  window.cloudinary.openUploadWidget(
-    {
-      cloudName: "dmq3cpw6u",
-      uploadPreset: "eom5grdo",
-      sources: ["local", "url", "camera", "facebook", "dropbox"],
-      defaultSource: "local",
-    },
-    async (error, result) => {
-      if (!error && result && result.event === "success") {
-        const uploadedAvatarUrl = result.info.url;
-        setAvatarUrl(uploadedAvatarUrl);
+  const uploadWidget = () => {
+    window.cloudinary.openUploadWidget(
+      {
+        cloudName: "dmq3cpw6u",
+        uploadPreset: "eom5grdo",
+        sources: ["local", "url", "camera", "facebook", "dropbox"],
+        defaultSource: "local",
+      },
+      async (error, result) => {
+        if (!error && result && result.event === "success") {
+          const uploadedAvatarUrl = result.info.url;
+          setAvatarUrl(uploadedAvatarUrl);
 
-        setFormData((prev) => ({ ...prev, avatarUrl: uploadedAvatarUrl }));
+          setFormData((prev) => ({ ...prev, avatarUrl: uploadedAvatarUrl }));
+        }
       }
-    }
-  );
-};
+    );
+  };
 
 
 
@@ -96,40 +96,40 @@ const uploadWidget = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-const handleProfileUpdate = async (e, updatedData = formData) => {
-  if (e && e.preventDefault) {
-    e.preventDefault(); // Check if e is an event to prevent default
-  }
+  const handleProfileUpdate = async (e, updatedData = formData) => {
+    if (e && e.preventDefault) {
+      e.preventDefault(); // Check if e is an event to prevent default
+    }
 
-  try {
-    const token = Cookies.get("token");
+    try {
+      const token = Cookies.get("token");
 
-    console.log("Sending data:", updatedData); // <-- Add this log for sent data
+      console.log("Sending data:", updatedData); // <-- Add this log for sent data
 
-    const response = await fetch(
-      `https://app-shmeeter-server-production.up.railway.app/api/users/${userProfile.id}`,
-      {
-        method: "PUT",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updatedData),
-      }
-    );
+      const response = await fetch(
+        `https://app-shmeeter-server-production.up.railway.app/api/users/${userProfile.id}`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updatedData),
+        }
+      );
 
-    const data = await response.json();
+      const data = await response.json();
 
-    console.log("Received data:", data); // <-- Add this log for received data
+      console.log("Received data:", data); // <-- Add this log for received data
 
-    setUserProfile(data);
-    dispatch({ type: "SET_USER", payload: data });
+      setUserProfile(data);
+      dispatch({ type: "SET_USER", payload: data });
 
-    // ... (rest of the function)
-  } catch (error) {
-    console.error("There was an error updating the profile:", error);
-  }
-};
+      // ... (rest of the function)
+    } catch (error) {
+      console.error("There was an error updating the profile:", error);
+    }
+  };
 
 
   if (!userProfile) return <p>You must log in first...</p>;
@@ -137,30 +137,30 @@ const handleProfileUpdate = async (e, updatedData = formData) => {
   return (
     <div className='container'>
       <div className='row'>
-        <div className='col-6 col-offset-3'>
+        <div className='col-6 offset-3'>
           <div className='profile-container'>
-            {avatarUrl && (
+            {/* Directly check for transformedAvatar */}
+            {transformedAvatar ? (
               <div className='avatar-container'>
-                {transformedAvatar && (
-                  <div className='avatar-container'>
-                    <AdvancedImage cldImg={transformedAvatar} />
-                  </div>
-                )}
+                <AdvancedImage cldImg={transformedAvatar} />
               </div>
+            ) : (
+              <img
+                src={
+                  avatarUrl ||
+                  userProfile.avatarUrl ||
+                  "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=identicon&f=y"
+                }
+                alt='User Avatar'
+              />
             )}
 
-            <div className='profile-header'>
+            <section className='profile-header'>
               <h1>Welcome, {userProfile.displayName}</h1>
-            </div>
-            <td>
-              <img src={avatarUrl || userProfile.avatarUrl} alt='User Avatar' />
-            </td>
-            <button className='btn btn--upload' onClick={uploadWidget}>
-              Upload Avatar or change it
-            </button>
-            <div className='profile-content'>
-              <h2>This is your profile</h2>
+            </section>
 
+            <section className='profile-content'>
+              <h2>This Is Your Profile</h2>
               <table>
                 <tbody>
                   <tr>
@@ -168,7 +168,7 @@ const handleProfileUpdate = async (e, updatedData = formData) => {
                     <td>{state.user?.username}</td>
                   </tr>
                   <tr>
-                    <td>displayName:</td>
+                    <td>DisplayName:</td>
                     <td>{userProfile.displayName}</td>
                   </tr>
                   <tr>
@@ -179,17 +179,20 @@ const handleProfileUpdate = async (e, updatedData = formData) => {
                     <td>Description:</td>
                     <td>{userProfile.description}</td>
                   </tr>
-                  <tr>
+                  {/* <tr>
                     <td>AvatarUrl:</td>
                     <td>{avatarUrl || userProfile.avatarUrl}</td>
-                  </tr>
+                  </tr> */}
                 </tbody>
               </table>
+            </section>
 
+            <section className='profile-edit'>
               <h2>Edit Profile</h2>
-
               <form onSubmit={(e) => handleProfileUpdate(e)}>
-                {" "}
+                <button className='btn btn--upload' onClick={uploadWidget}>
+                  Upload Avatar or Change It
+                </button>
                 <div className='form-group'>
                   <label>Displayed Name:</label>
                   <input
@@ -200,8 +203,8 @@ const handleProfileUpdate = async (e, updatedData = formData) => {
                     required
                   />
                 </div>
-                <div className='form-group'>
-                  <label>avatarUrl:</label>
+                {/* <div className='form-group'>
+                  <label>Avatar URL:</label>
                   <input
                     type='text'
                     name='avatarUrl'
@@ -209,7 +212,7 @@ const handleProfileUpdate = async (e, updatedData = formData) => {
                     onChange={handleChange}
                     required
                   />
-                </div>
+                </div> */}
                 <div className='form-group'>
                   <label>Description:</label>
                   <textarea
@@ -224,12 +227,13 @@ const handleProfileUpdate = async (e, updatedData = formData) => {
                   Update Profile
                 </button>
               </form>
-            </div>
+            </section>
           </div>
         </div>
       </div>
     </div>
   );
-};
+}
+
 
 export default Profile;
