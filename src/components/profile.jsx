@@ -1,27 +1,19 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Cookies from "js-cookie";
-import { GlobalStateContext } from "../GlobalStateContext";
 import { AdvancedImage } from "@cloudinary/react";
 import { Cloudinary } from "@cloudinary/url-gen";
 import { fill } from "@cloudinary/url-gen/actions/resize";
+import { useAtom } from "jotai";
+import { userProfileAtom, formDataAtom } from "../state";
 
 const Profile = () => {
-  const { state, dispatch } = useContext(GlobalStateContext);
-
   // Accessing state:
-  console.log(state.user?.displayName);
 
   const [avatarUrl, setAvatarUrl] = useState(null);
-  const [userProfile, setUserProfile] = useState(null);
+  const [userProfile, setUserProfile] = useAtom(userProfileAtom);
+  console.log(userProfile?.displayName);
 
-  const [formData, setFormData] = useState({
-    username: "",
-    displayName: "",
-    email: "",
-    password: "",
-    description: "",
-    avatarUrl: "",
-  });
+  const [formData, setFormData] = useAtom(formDataAtom);
 
   const cld = new Cloudinary({
     cloud: {
@@ -31,8 +23,8 @@ const Profile = () => {
 
   const transformedAvatar = avatarUrl
     ? cld
-      .image(avatarUrl.split("/").pop().split(".")[0])
-      .resize(fill().width(250).height(250))
+        .image(avatarUrl.split("/").pop().split(".")[0])
+        .resize(fill().width(250).height(250))
     : null;
 
   const uploadWidget = () => {
@@ -54,8 +46,6 @@ const Profile = () => {
     );
   };
 
-
-
   useEffect(() => {
     const fetchUserProfile = async () => {
       const token = Cookies.get("token");
@@ -73,7 +63,6 @@ const Profile = () => {
 
           const data = await response.json();
           setUserProfile(data);
-          dispatch({ type: "SET_USER", payload: data }); // Update the global state with fetched user data
 
           setFormData({
             username: data.username || "",
@@ -89,7 +78,7 @@ const Profile = () => {
     };
 
     fetchUserProfile();
-  }, [dispatch]);
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -123,14 +112,11 @@ const Profile = () => {
       console.log("Received data:", data); // <-- Add this log for received data
 
       setUserProfile(data);
-      dispatch({ type: "SET_USER", payload: data });
 
-      // ... (rest of the function)
     } catch (error) {
       console.error("There was an error updating the profile:", error);
     }
   };
-
 
   if (!userProfile) return <p>You must log in first...</p>;
 
@@ -165,7 +151,7 @@ const Profile = () => {
                 <tbody>
                   <tr>
                     <td>Username:</td>
-                    <td>{state.user?.username}</td>
+                    <td>{userProfile?.username}</td>
                   </tr>
                   <tr>
                     <td>DisplayName:</td>
@@ -233,7 +219,6 @@ const Profile = () => {
       </div>
     </div>
   );
-}
-
+};
 
 export default Profile;

@@ -26,6 +26,9 @@ dependencies:
   cloudinary-react:
     specifier: ^1.8.1
     version: 1.8.1(lodash@4.17.21)(react@18.2.0)
+  jotai:
+    specifier: ^2.3.1
+    version: 2.3.1(@types/react@18.2.20)(react@18.2.0)
   js-cookie:
     specifier: ^3.0.5
     version: 3.0.5
@@ -1751,6 +1754,22 @@ packages:
   /isexe@2.0.0:
     resolution: {integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==}
     dev: true
+
+  /jotai@2.3.1(@types/react@18.2.20)(react@18.2.0):
+    resolution: {integrity: sha512-pXhx8/MeRUAHbzayerEUf9NHvP+Ba3q9WAvIMjaSwwuSCKEFhb8UW4XuZPC+Bv4u2ufvlyrxIZ+vy5UJ3f8JsQ==}
+    engines: {node: '>=12.20.0'}
+    peerDependencies:
+      '@types/react': '>=17.0.0'
+      react: '>=17.0.0'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      react:
+        optional: true
+    dependencies:
+      '@types/react': 18.2.20
+      react: 18.2.0
+    dev: false
 
   /js-cookie@3.0.5:
     resolution: {integrity: sha512-cEiJEAEoIbWfCZYKWhVwFuvPX1gETRYPw6LlaTKoxD3s2AkXzkCjnp6h0V77ozyqj0jakteJ4YqDJT830+lVGw==}

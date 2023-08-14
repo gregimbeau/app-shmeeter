@@ -2,11 +2,11 @@ import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
 import "./style/main.scss";
-import { GlobalStateProvider } from "./GlobalStateContext";
+import { Provider } from "jotai";
 
 ReactDOM.render(
-  <GlobalStateProvider>
+  <Provider>
     <App />
-  </GlobalStateProvider>,
+  </Provider>,
   document.getElementById("root")
 );

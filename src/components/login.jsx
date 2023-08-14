@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
+import { useAtom } from "jotai";
+import { loginDataAtom, errorMsgAtom } from "../state";
 
 const LoginForm = () => {
-  const [loginData, setLoginData] = useState({
-    identifier: "",
-    password: "",
-  });
-  const [errorMsg, setErrorMsg] = useState("");
+  const [loginData, setLoginData] = useAtom(loginDataAtom);
+  const [errorMsg, setErrorMsg] = useAtom(errorMsgAtom);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -25,52 +24,57 @@ const LoginForm = () => {
     }));
   };
 
-const fetchUserProfile = async () => {
-  const token = Cookies.get("token");
+  const fetchUserProfile = async () => {
+    const token = Cookies.get("token");
 
-  if (token) {
-    try {
-      const response = await fetch("https://app-shmeeter-server-production.up.railway.app/api/users/me", {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
+    if (token) {
+      try {
+        const response = await fetch(
+          "https://app-shmeeter-server-production.up.railway.app/api/users/me",
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
-      if (!response.ok) {
-        const text = await response.text();
-        throw new Error(`HTTP error ${response.status}: ${text}`);
+        if (!response.ok) {
+          const text = await response.text();
+          throw new Error(`HTTP error ${response.status}: ${text}`);
+        }
+
+        const userProfile = await response.json();
+        console.log("User profile:", userProfile);
+
+        localStorage.setItem("userId", userProfile.id);
+
+        // You can, for example, save this profile to a state or do other processing here.
+      } catch (error) {
+        console.error("There was an error fetching user profile:", error);
       }
-
-      const userProfile = await response.json();
-      console.log("User profile:", userProfile);
-
-      localStorage.setItem("userId", userProfile.id);
-
-      // You can, for example, save this profile to a state or do other processing here.
-    } catch (error) {
-      console.error("There was an error fetching user profile:", error);
+    } else {
+      console.log("No token found. User is not authenticated.");
     }
-  } else {
-    console.log("No token found. User is not authenticated.");
-  }
-};
-
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("https://app-shmeeter-server-production.up.railway.app/api/auth/local", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          identifier: loginData.identifier,
-          password: loginData.password,
-        }),
-      });
+      const response = await fetch(
+        "https://app-shmeeter-server-production.up.railway.app/api/auth/local",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            identifier: loginData.identifier,
+            password: loginData.password,
+          }),
+        }
+      );
 
       if (!response.ok) {
         const text = await response.text();
@@ -98,8 +102,7 @@ const fetchUserProfile = async () => {
   };
 
   return (
-
-    <div className="container">
+    <div className='container'>
       <h2>Login</h2>
       {errorMsg && <p style={{ color: "red" }}>{errorMsg}</p>}
       <form onSubmit={handleSubmit}>

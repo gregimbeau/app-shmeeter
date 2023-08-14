@@ -1,13 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { fetchUserIdByUsername } from "../utilities/userMapping";
+import { useAtom } from "jotai";
+import { userAtom, postsAtom } from "../state";
 
 const UserProfile = () => {
   const { username } = useParams();
-  const [user, setUser] = useState(null);
-  const [posts, setPosts] = useState([]);
 
-  // This is where you get your JWT. In this example, it's fetched from localStorage.
+  // Utilisez Jotai pour gérer l'état
+  const [user, setUser] = useAtom(userAtom);
+  const [posts, setPosts] = useAtom(postsAtom);
+
   const jwt = localStorage.getItem("jwt");
 
   useEffect(() => {
@@ -28,7 +31,6 @@ const UserProfile = () => {
         Authorization: `Bearer ${jwt}`,
       };
 
-      // Fetch user's profile based on ID
       const userResponse = await fetch(
         `https://app-shmeeter-server-production.up.railway.app/api/users/${userId}`,
         { headers }
@@ -36,18 +38,17 @@ const UserProfile = () => {
       const userData = await userResponse.json();
       setUser(userData);
 
-      // Fetch user's posts using the filter
       const postsResponse = await fetch(
         `https://app-shmeeter-server-production.up.railway.app/api/posts?filters[author][id][$eq]=${userId}`,
         { headers }
       );
       const userPosts = await postsResponse.json();
 
-      setPosts(userPosts.data); // Assuming the posts are inside the 'data' key of the response
+      setPosts(userPosts.data);
     };
 
     fetchUserProfile();
-  }, [username, jwt]);
+  }, [username, jwt, setUser, setPosts]);
 
   return (
     <div className='container user-profile-container'>

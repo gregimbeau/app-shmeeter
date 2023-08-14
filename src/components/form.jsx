@@ -1,17 +1,11 @@
 import React, { useState } from "react";
 import Bravo from "@/components/bravo";
+import { useAtom } from "jotai";
+import { modalVisibleAtom, formDataAtom } from "../state"; // Adjust the path as necessary
 
 const InscriptionForm = () => {
-  const [isModalVisible, setIsModalVisible] = useState(false);
-
-  const [formData, setFormData] = useState({
-    username: "",
-    displayName: "",
-    email: "",
-    password: "",
-    description: "",
-    role: 1,
-  });
+  const [isModalVisible, setIsModalVisible] = useAtom(modalVisibleAtom);
+  const [formData, setFormData] = useAtom(formDataAtom);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

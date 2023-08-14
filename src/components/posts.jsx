@@ -1,17 +1,25 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import UserProfile from "./userProfile";
+import { useAtom } from "jotai";
 import CreatePost from "@/components/createPost";
-
+import {
+  postsAtom,
+  loadingAtom,
+  errorAtom,
+  sortOrderAtom,
+  isUserLoggedInAtom,
+  userLikesAtom,
+} from "../state";
 import Likes from "./likes.jsx";
 
 const PostsPage = () => {
-  const [posts, setPosts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [sortOrder, setSortOrder] = useState("desc");
-  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
-  const [userLikes, setUserLikes] = useState({});
+  const [posts, setPosts] = useAtom(postsAtom);
+  const [loading, setLoading] = useAtom(loadingAtom);
+  const [error, setError] = useAtom(errorAtom);
+  const [sortOrder, setSortOrder] = useAtom(sortOrderAtom);
+  const [isUserLoggedIn, setIsUserLoggedIn] = useAtom(isUserLoggedInAtom);
+  const [userLikes, setUserLikes] = useAtom(userLikesAtom);
 
   const handleDelete = async (id) => {
     try {
@@ -182,7 +190,7 @@ const PostsPage = () => {
     }
 
     fetchPosts();
-  }, [sortOrder]);
+  }, [sortOrder, setIsUserLoggedIn]);
 
   if (loading) {
     return <p>Chargement des posts...</p>;

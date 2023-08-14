@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 
+
 const CreatePost = ({ onPostCreated, onRefreshPosts }) => {
   const navigate = useNavigate();
   const [message, setMessage] = useState(null);
@@ -120,37 +121,35 @@ const CreatePost = ({ onPostCreated, onRefreshPosts }) => {
   }, []);
   console.log("Loading:", loading);
 
-return (
-  <div className='posts-container'>
-    <h3>Create a Post</h3>
+  return (
+    <div className='posts-container'>
+      <h3>Create a Post</h3>
 
-    {message && <div className='success'>{message}</div>}
-    {error && <div className='error'>{error}</div>}
+      {message && <div className='success'>{message}</div>}
+      {error && <div className='error'>{error}</div>}
 
-    <form onSubmit={handleSubmit} className='form-group'>
-      <div>
-        <label>Text:</label>
-        <input
-          type='text'
-          name='text'
-          value={postData.text}
-          onChange={handleChange}
-          required
-          className='form-input' // Add class for styling
-        />
-      </div>
+      <form onSubmit={handleSubmit} className='form-group'>
+        <div>
+          <label>Text:</label>
+          <input
+            type='text'
+            name='text'
+            value={postData.text}
+            onChange={handleChange}
+            required
+            className='form-input' // Add class for styling
+          />
+        </div>
 
-      <button
-        type='submit'
-        className='btn btn--primary' // Apply button styles
-        disabled={loading || !userProfile}>
-        Publish
-      </button>
-    </form>
-  </div>
-);
-
-
+        <button
+          type='submit'
+          className='btn btn--primary' // Apply button styles
+          disabled={loading || !userProfile}>
+          Publish
+        </button>
+      </form>
+    </div>
+  );
 };
 
 export default CreatePost;
