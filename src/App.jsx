@@ -8,6 +8,7 @@ import PostsPage from "@/components/posts";
 import CreatePost from "@/components/createPost";
 import Likes from "@/components/likes";
 import UserProfile from "@/components/userProfile";
+import InstallButton from "@/components/InstallButton";
 
 
 function App() {
@@ -15,7 +16,7 @@ function App() {
     <div className='main-content'>
       <Router>
         <Header />
-
+        <InstallButton />
         <Routes location={location}>
           <Route path='/' element={<PostsPage />} />
           <Route path='/login' element={<LoginForm />} />
