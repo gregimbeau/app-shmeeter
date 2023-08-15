@@ -25,7 +25,7 @@ export default defineConfig({
         ],
       },
       workbox: {
-        swDest: "/sw.js",
+        swDest: "sw.js",
         globPatterns: ["**/*.{js,css,html,svg}"],
         skipWaiting: true,
         clientsClaim: true,
