@@ -1,34 +1,46 @@
-import React, { useState, useEffect } from "react";
+// InstallButton.js
+import React, { useEffect, useState } from "react";
 
 function InstallButton() {
   const [deferredPrompt, setDeferredPrompt] = useState(null);
 
   useEffect(() => {
-    window.addEventListener("beforeinstallprompt", (e) => {
+    const beforeInstallPromptHandler = (e) => {
       e.preventDefault();
       setDeferredPrompt(e);
-    });
+    };
+
+    const appInstalledHandler = () => {
+      console.log("PWA was installed");
+    };
+
+    window.addEventListener("beforeinstallprompt", beforeInstallPromptHandler);
+    window.addEventListener("appinstalled", appInstalledHandler);
+
+    return () => {
+      window.removeEventListener(
+        "beforeinstallprompt",
+        beforeInstallPromptHandler
+      );
+      window.removeEventListener("appinstalled", appInstalledHandler);
+    };
   }, []);
 
-  const handleInstallClick = () => {
+  const handleInstallClick = async () => {
+    if (!deferredPrompt) return;
     deferredPrompt.prompt();
-
-    deferredPrompt.userChoice.then((choiceResult) => {
-      if (choiceResult.outcome === "accepted") {
-        console.log("User accepted the install prompt");
-      } else {
-        console.log("User dismissed the install prompt");
-      }
-      setDeferredPrompt(null);
-    });
+    const { outcome } = await deferredPrompt.userChoice;
+    console.log(`User response to the install prompt: ${outcome}`);
+    setDeferredPrompt(null);
   };
 
   return (
-    <>
-      {deferredPrompt && (
-        <button onClick={handleInstallClick}>Install App</button>
-      )}
-    </>
+    <button
+      id='install-button'
+      style={{ display: deferredPrompt ? "block" : "none" }}
+      onClick={handleInstallClick}>
+      Installer l'application
+    </button>
   );
 }
 

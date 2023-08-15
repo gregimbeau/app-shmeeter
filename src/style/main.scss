@@ -25,3 +25,9 @@
 body {
     padding-bottom: $footer-height;
 }
+
+@media all and (display-mode: standalone) {
+  body {
+    background-color: yellow;
+  }
+}

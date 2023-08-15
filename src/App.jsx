@@ -10,6 +10,8 @@ import Likes from "@/components/likes";
 import UserProfile from "@/components/userProfile";
 import InstallButton from "@/components/InstallButton";
 
+
+
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker
