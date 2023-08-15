@@ -31,6 +31,19 @@ export default defineConfig({
         globPatterns: ["**/*.{js,css,html,svg}"],
         skipWaiting: true,
         clientsClaim: true,
+        runtimeCaching: [
+          {
+            urlPattern: /^https?.*/,
+            handler: "NetworkFirst",
+            options: {
+              cacheName: "all",
+              expiration: {
+                maxEntries: 500,
+                maxAgeSeconds: 60 * 60 * 24 * 30, // 30 Days
+              },
+            },
+          },
+        ],
       },
     }),
   ],
