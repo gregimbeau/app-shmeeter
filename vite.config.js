@@ -5,6 +5,8 @@ import { VitePWA } from "vite-plugin-pwa";
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: "/",
+
   plugins: [
     react(),
     VitePWA({
@@ -25,7 +27,7 @@ export default defineConfig({
         ],
       },
       workbox: {
-        swDest: "/public/sw.js",
+        swDest: "sw.js",
         globPatterns: ["**/*.{js,css,html,svg}"],
         skipWaiting: true,
         clientsClaim: true,
