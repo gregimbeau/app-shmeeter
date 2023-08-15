@@ -1,8 +1,11 @@
-// InstallButton.js
 import React, { useEffect, useState } from "react";
+import { useAtom } from "jotai";
+import { userPostCountAtom, pwaInstallPromptAtom } from "../state";
 
 function InstallButton() {
-  const [deferredPrompt, setDeferredPrompt] = useState(null);
+  const [userPostCount] = useAtom(userPostCountAtom);
+  const [deferredPrompt, setDeferredPrompt] = useAtom(pwaInstallPromptAtom);
+  const [isDismissed, setIsDismissed] = useState(false);
 
   useEffect(() => {
     const beforeInstallPromptHandler = (e) => {
@@ -24,10 +27,21 @@ function InstallButton() {
       );
       window.removeEventListener("appinstalled", appInstalledHandler);
     };
-  }, []);
+  }, [setDeferredPrompt]);
+
+  useEffect(() => {
+    if (userPostCount % 2 === 0 && userPostCount > 0 && deferredPrompt) {
+      setIsDismissed(false);
+      if (deferredPrompt) {
+        setDeferredPrompt(true);
+      }
+      console.log("Showing install button...");
+    }
+  }, [userPostCount, isDismissed, deferredPrompt]);
 
   const handleInstallClick = async () => {
-    if (!deferredPrompt) return;
+    if (!deferredPrompt || typeof deferredPrompt.prompt !== "function") return;
+
     deferredPrompt.prompt();
     const { outcome } = await deferredPrompt.userChoice;
     console.log(`User response to the install prompt: ${outcome}`);
@@ -35,12 +49,27 @@ function InstallButton() {
   };
 
   return (
-    <button
-      id='install-button'
-      style={{ display: deferredPrompt ? "block" : "none" }}
-      onClick={handleInstallClick}>
-      Installer l'application
-    </button>
+    <div>
+      <button
+        id='install-button'
+        className='install-button'
+        onClick={handleInstallClick}
+        style={{
+          display: deferredPrompt && !isDismissed ? "inline-flex" : "none",
+        }}>
+        <i className='fas fa-download'></i>
+        Add to Home Screen
+      </button>
+      <button
+        id='dismiss-button'
+        className='dismiss-button'
+        onClick={() => setIsDismissed(true)}
+        style={{
+          display: deferredPrompt && !isDismissed ? "inline-flex" : "none",
+        }}>
+        Dismiss
+      </button>
+    </div>
   );
 }
 

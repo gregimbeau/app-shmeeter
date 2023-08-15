@@ -41,3 +41,5 @@ export const loginStateAtom = atom({
   token: localStorage.getItem("jwt") || null,
   userId: localStorage.getItem("userId") || null,
 });
+export const userPostCountAtom = atom(0);
+export const pwaInstallPromptAtom = atom(null);

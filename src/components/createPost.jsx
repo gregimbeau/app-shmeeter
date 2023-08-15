@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
-import { API_BASE_URL } from "../config"; 
-
+import { API_BASE_URL } from "../config";
+import { useAtom } from "jotai";
+import { userPostCountAtom } from "../state";
+import InstallButton from "./InstallButton"; 
 
 const CreatePost = ({ onPostCreated, onRefreshPosts }) => {
+  const [userPostCount, setUserPostCount] = useAtom(userPostCountAtom);
+
   const navigate = useNavigate();
   const [message, setMessage] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -16,16 +20,13 @@ const CreatePost = ({ onPostCreated, onRefreshPosts }) => {
     if (token) {
       try {
         setLoading(true); // start loading
-        const response = await fetch(
-          `${API_BASE_URL}/api/users/me`,
-          {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const response = await fetch(`${API_BASE_URL}/api/users/me`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
 
         if (!response.ok) {
           const text = await response.text();
@@ -77,17 +78,14 @@ const CreatePost = ({ onPostCreated, onRefreshPosts }) => {
     };
     console.log(postData);
     try {
-      const response = await fetch(
-        `${API_BASE_URL}/api/posts`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${currentJwtToken}`,
-          },
-          body: JSON.stringify(requestBody),
-        }
-      );
+      const response = await fetch(`${API_BASE_URL}/api/posts`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${currentJwtToken}`,
+        },
+        body: JSON.stringify(requestBody),
+      });
 
       if (response.ok) {
         const responseData = await response.json();
@@ -116,6 +114,7 @@ const CreatePost = ({ onPostCreated, onRefreshPosts }) => {
       console.error("Erreur lors de la création du post:", error);
     }
     fetchUserProfile();
+    setUserPostCount((count) => count + 1);
   };
   useEffect(() => {
     fetchUserProfile();
@@ -125,7 +124,6 @@ const CreatePost = ({ onPostCreated, onRefreshPosts }) => {
   return (
     <div className='posts-container'>
       <h3>Create a Post</h3>
-
       {message && <div className='success'>{message}</div>}
       {error && <div className='error'>{error}</div>}
 

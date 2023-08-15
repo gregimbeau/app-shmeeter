@@ -37,3 +37,56 @@
   box-shadow: 0 0 4px 1px rgb(26, 165, 219);
   cursor: pointer;
 }
+
+.install-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  background-color: #4caf50;
+  border: none;
+  color: white;
+  padding: 12px 24px;
+  text-align: center;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  margin: 20px;
+  transition: background-color 0.3s, transform 0.3s;
+  z-index: 2;
+}
+
+.install-button:hover {
+  background-color: #45a049;
+  transform: scale(1.05);
+}
+
+.dismiss-button {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  background-color: #aca39d;
+  border: none;
+  color: rgb(255, 255, 255);
+  padding: 20px 72px;
+  text-align: center;
+  padding-top: 40px;
+  padding-bottom: 5px;
+  transition: background-color 0.3s, transform 0.3s;
+  font-size: 12px;
+  cursor: pointer;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  margin: -219px;
+  margin-top: 25px; /* Add this line */
+  z-index: 1;
+}
+
+.dismiss-button:hover {
+  background-color: #d4c8c1;
+  transform: scale(1.01);
+}
+
+// .dismiss-button i {
+//   margin-right: 8px;
+// }
