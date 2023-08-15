@@ -57,8 +57,7 @@ function InstallButton() {
         style={{
           display: deferredPrompt && !isDismissed ? "inline-flex" : "none",
         }}>
-        <i className='fas fa-download'></i>
-        Add to Home Screen
+        <i className='fas fa-download'></i> Add to Home Screen
       </button>
       <button
         id='dismiss-button'

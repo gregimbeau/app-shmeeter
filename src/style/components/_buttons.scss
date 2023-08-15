@@ -60,6 +60,9 @@
   background-color: #45a049;
   transform: scale(1.05);
 }
+.install-button .fas {
+  margin-right: 10px;
+}
 
 .dismiss-button {
   position: absolute;
@@ -68,7 +71,7 @@
   background-color: #aca39d;
   border: none;
   color: rgb(255, 255, 255);
-  padding: 20px 72px;
+  padding: 20px 78px;
   text-align: center;
   padding-top: 40px;
   padding-bottom: 5px;
@@ -77,14 +80,13 @@
   cursor: pointer;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  margin: -219px;
+  margin: -229px;
   margin-top: 25px; /* Add this line */
   z-index: 1;
 }
 
 .dismiss-button:hover {
-  background-color: #d4c8c1;
-  transform: scale(1.01);
+  background-color: #91857e;
 }
 
 // .dismiss-button i {
