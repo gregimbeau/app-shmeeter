@@ -1,0 +1,47 @@
+{
+  "name": "MySocialNetWork",
+  "short_name": "MSN",
+  "description": "Your best social media",
+  "lang": "fr",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "white",
+  "theme_color": "white",
+  "icons": [
+    {
+      "src": "images/like6.png",
+      "sizes": "16x16",
+      "type": "image/png"
+    },
+    {
+      "src": "images/like5.png",
+      "sizes": "24x24",
+      "type": "image/png"
+    },
+    {
+      "src": "images/like4.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "images/like3.png",
+      "sizes": "64x64",
+      "type": "image/png"
+    },
+    {
+      "src": "images/like2.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    },
+    {
+      "src": "images/like1.png",
+      "sizes": "256x256",
+      "type": "image/png"
+    },
+    {
+      "src": "images/like.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
