@@ -10,7 +10,7 @@ const Footer = () => {
   return (
     <footer className='footer'>
       <div className='container'>
-        <p>&copy; 2023 My Social Network</p>
+        <p className="pfooter">&copy; 2023 My Social Network</p>
         <nav className='footer-nav'>
           <About />
           <Faq />
