@@ -8,6 +8,7 @@ The goal of this project is to set up a quasi-Twitter. This app is minimalist an
 - User authentication (Sign up, Log in, Log out)
 - Profile display and editing
 - The ability to create posts
+- The app can be donwloaded and installed on destop and mobiles (WPA)
 
 ### 2.1. Features
 
@@ -34,6 +35,7 @@ For logged out users:
 For logged in users:
 - Like and unlike posts.
 - Delete their own posts.
+- Update their profile and picture
 - Logout.
 
 #### 2.1.7. Optimization Tips
